@@ -1,0 +1,121 @@
+<div class="min-h-screen bg-background pb-24">
+    <header class="sticky top-0 z-40 bg-[#110c08]/95 backdrop-blur-md border-b border-gray py-4 px-6 flex items-center gap-4 shadow-sm">
+        <button (click)="goBack()" class="w-10 h-10 rounded-full bg-card border border-gray flex items-center justify-center text-subtext hover:text-white transition-colors cursor-pointer">
+            <lucide-icon name="arrow-left" class="w-5 h-5"></lucide-icon>
+        </button>
+
+        <h1 class="text-xl font-bold text-white">Finalizar Pedido</h1>
+    </header>
+
+    <main class="max-w-[1200px] mx-auto px-4 sm:px-6 mt-8 flex flex-col lg:flex-row gap-6 lg:gap-8">
+        <div class="flex-1 flex flex-col gap-6">
+            <app-checkout-items 
+                [items]="facade.cartState.cartData().items || []" 
+                [isLoading]="facade.cartState.isLoading()">
+            </app-checkout-items>
+            
+            <section class="bg-card border border-gray rounded-2xl p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-6 border-b border-gray pb-4">
+                    <div class="flex items-center gap-3">
+                        <lucide-icon name="map-pin" class="w-6 h-6 text-primary"></lucide-icon>
+                        <h2 class="text-lg font-bold text-white">Detalhes do Endereço</h2>
+                    </div>
+
+                    @if (facade.addressState.userAddress()) {
+                        <button (click)="facade.addressState.openModal()" class="px-4 py-2 rounded-xl border border-primary text-primary text-sm font-medium hover:bg-primary/10 transition-colors cursor-pointer">
+                            Trocar
+                        </button>
+                    }
+                </div>
+
+                @if (facade.addressState.userAddress()) {
+                    <div class="flex items-start gap-4">
+                        <div class="mt-1">
+                            <div class="w-10 h-10 rounded-full bg-background border border-gray flex items-center justify-center text-primary">
+                                <lucide-icon name="map-pin" class="w-5 h-5 fill-primary/20"></lucide-icon>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <span class="text-white font-bold text-base">{{ facade.addressState.userAddress().street }}, {{ facade.addressState.userAddress().number }}</span>
+                            <span class="text-subtext text-sm mt-0.5">{{ facade.addressState.userAddress().type }} • {{ facade.addressState.userAddress().neighborhood }}</span>
+                        </div>
+                    </div>
+                } @else {
+                    <div class="flex flex-col items-center justify-center py-6 text-center">
+                        <lucide-icon name="map-pin" class="w-12 h-12 text-subtext/40 mb-3"></lucide-icon>
+                        <p class="text-subtext text-sm mb-5">Nenhum endereço selecionado para entrega.</p>
+                        
+                        <button (click)="facade.addressState.openModal()" class="px-6 py-3 rounded-full btn-primary-gradient text-white text-sm font-bold shadow-lg flex items-center gap-2 cursor-pointer hover:brightness-110 transition-all">
+                            <lucide-icon name="plus" class="w-4 h-4"></lucide-icon>
+                            Adicionar Endereço
+                        </button>
+                    </div>
+                }
+            </section>
+        </div>
+
+        <div class="w-full lg:w-[420px]">
+            <div class="sticky top-24 flex flex-col gap-6">
+                <app-payment-selector 
+                    [paymentMethod]="facade.paymentMethod()" 
+                    (paymentMethodChange)="facade.paymentMethod.set($event)"
+                    [changeFor]="facade.changeFor()"
+                    (changeForChange)="facade.changeFor.set($event)">
+                </app-payment-selector>
+
+                <section class="bg-card border border-gray rounded-2xl p-6 shadow-xl">
+                    <div class="flex flex-col gap-4 mb-6">
+                        <div class="flex justify-between items-center text-subtext font-medium">
+                            <span>Subtotal</span>
+                            <span>R$ {{ facade.cartState.cartData().cartTotal || 0 | number:'1.2-2' }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center text-subtext font-medium">
+                            <span>Taxa de entrega</span>
+                            <span>
+                                @if (facade.freightValue() !== null) {
+                                    R$ {{ facade.freightValue() | number:'1.2-2' }}
+                                } @else {
+                                    <span class="text-primary text-sm font-bold">Erro ao carregar</span>
+                                }
+                            </span>
+                        </div>
+
+                        <div class="border-t border-gray border-dashed my-1"></div>
+
+                        <div class="flex justify-between items-center">
+                            <span class="text-white font-bold text-lg">Total</span>
+
+                            <span class="text-green font-bold text-2xl">
+                                @if (facade.freightValue() !== null) {
+                                    R$ {{ facade.totalOrder() | number:'1.2-2' }}
+                                } @else {
+                                    --
+                                }
+                            </span>
+                        </div>
+                    </div>
+
+                    <button
+                        class="w-full btn-primary-gradient text-white rounded-full flex justify-center items-center h-14 px-6 cursor-pointer hover:brightness-110 active:scale-[0.98] transition-all font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                        [disabled]="!facade.cartState.cartData().items?.length || facade.cartState.isLoading() || facade.isSubmitting() || !facade.addressState.userAddress() || facade.freightValue() === null"
+                        (click)="facade.placeOrder()">
+                        {{ facade.isSubmitting() ? 'Enviando...' : 'Finalizar Pedido' }}
+                    </button>
+                </section>
+            </div>
+        </div>
+    </main>
+</div> 
+
+<app-success-modal [isVisible]="facade.showSuccessModal()"></app-success-modal>
+
+@if (facade.addressState.showAddressModal()) {
+    <app-address-modal
+        [addresses]="facade.addressState.addresses()"
+        [userAddress]="facade.addressState.userAddress()"
+        (close)="facade.addressState.closeModal()"
+        (selectAddress)="facade.addressState.selectAddress($event)">
+    </app-address-modal>
+}

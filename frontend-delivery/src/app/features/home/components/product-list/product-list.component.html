@@ -1,0 +1,95 @@
+<div class="w-full max-w-[1200px] mx-auto flex flex-col mt-2">
+    <div class="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide w-full mb-2">
+        <button 
+            (click)="setCategory('Todos')"
+            [class.bg-brand-gradient]="activeCategory === 'Todos'"
+            [class.text-white]="activeCategory === 'Todos'"
+            [class.border-transparent]="activeCategory === 'Todos'"
+            [class.bg-card]="activeCategory !== 'Todos'"
+            [class.text-subtext]="activeCategory !== 'Todos'"
+            [class.border-gray]="activeCategory !== 'Todos'"
+            class="px-6 py-2.5 rounded-full whitespace-nowrap text-sm font-medium border hover:text-white transition-all cursor-pointer">
+            Todos
+        </button>
+
+        @for (cat of catalog; track cat.id) {
+            <button 
+                (click)="setCategory(cat.catName)"
+                [class.bg-brand-gradient]="activeCategory === cat.catName"
+                [class.text-white]="activeCategory === cat.catName"
+                [class.border-transparent]="activeCategory === cat.catName"
+                [class.bg-card]="activeCategory !== cat.catName"
+                [class.text-subtext]="activeCategory !== cat.catName"
+                [class.border-gray]="activeCategory !== cat.catName"
+                class="px-6 py-2.5 rounded-full whitespace-nowrap text-sm font-medium border hover:text-white transition-all cursor-pointer">
+                {{ cat.catName }}
+            </button>
+        }
+    </div>
+
+    <div class="relative w-full mb-8">
+        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+            <lucide-icon name="search" class="w-5 h-5 text-subtext"></lucide-icon>
+        </div>
+
+        <input 
+            type="text" 
+            placeholder="Buscar por itens" 
+            (input)="onSearch($event)"
+            class="w-full bg-card border border-gray rounded-full py-3.5 pl-14 pr-6 text-white outline-none focus:border-primary transition-colors placeholder:text-subtext"
+        >
+    </div>
+
+    <div class="flex flex-col gap-10">
+        @for (section of filteredCatalogList; track section.id) {
+            <div>
+                <h3 class="text-xl font-bold text-white mb-6 mt-4">{{ section.catName }}</h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @for (product of section.products; track product.id) {
+                        <div class="bg-card border border-gray rounded-2xl flex flex-col group hover:border-primary/50 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer overflow-hidden"
+                                    (click)="openProductDetails(product.id)">
+                            <div class="relative w-full h-48 overflow-hidden">
+                                <img 
+                                    [src]="product.prodImageUrl" 
+                                    [alt]="product.prodName" 
+                                    class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                                >
+                            </div>
+
+                            <div class="p-5 flex flex-col flex-grow">
+                                <h4 class="text-white font-bold text-lg leading-tight mb-2">{{ product.prodName }}</h4>
+                                <p class="text-subtext text-sm line-clamp-2 leading-relaxed mb-4">{{ product.prodDescription }}</p>
+
+                                <div class="flex items-end justify-between mt-auto">
+                                    <div class="flex flex-col">
+                                       @if (product.prodPromotionalPrice && product.prodPromotionalPrice < product.prodOriginalPrice) {
+                                            <span class="text-subtext text-sm line-through mb-0.5">R$ {{ product.prodOriginalPrice | number:'1.2-2' }}</span>
+                                            <span class="text-green font-bold text-xl">R$ {{ product.prodPromotionalPrice | number:'1.2-2' }}</span>
+                                        } @else {
+                                            <span class="text-green font-bold text-xl">R$ {{ product.prodOriginalPrice | number:'1.2-2' }}</span>
+                                        }
+                                    </div>
+
+                                    <button class="w-10 h-10 rounded-full bg-brand-gradient flex items-center justify-center text-white hover:brightness-110 transition-all">
+                                        <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        
+        @if (filteredCatalogList.length === 0) {
+            <div class="text-center text-subtext py-12">
+                Nenhum produto encontrado.
+            </div>
+        }
+
+    
+    </div>
+    
+</div>

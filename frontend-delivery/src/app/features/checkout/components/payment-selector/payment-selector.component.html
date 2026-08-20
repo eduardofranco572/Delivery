@@ -1,0 +1,79 @@
+<section class="bg-card border border-gray rounded-2xl p-6 shadow-lg">
+    <div class="flex items-center gap-3 mb-6 border-b border-gray pb-4">
+        <lucide-icon name="wallet" class="w-6 h-6 text-primary"></lucide-icon>
+        <h2 class="text-lg font-bold text-white">Forma de pagamento</h2>
+    </div>
+
+    <div class="flex flex-col gap-4">  
+        <label class="flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all duration-300 group"
+                [class.border-primary]="paymentMethod === 'cash'"
+                [class.bg-primary/5]="paymentMethod === 'cash'"
+                [class.border-gray]="paymentMethod !== 'cash'"
+                [class.bg-background]="paymentMethod !== 'cash'">
+
+            <div class="flex items-center gap-4">
+                <lucide-icon name="banknote" [class.text-primary]="paymentMethod === 'cash'" [class.text-subtext]="paymentMethod !== 'cash'" class="w-6 h-6 transition-colors"></lucide-icon>
+                <span class="font-bold text-sm" [class.text-white]="paymentMethod === 'cash'" [class.text-subtext]="paymentMethod !== 'cash'">Pagar em dinheiro</span>
+            </div>
+
+            <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors"
+                    [class.border-primary]="paymentMethod === 'cash'"
+                    [class.border-subtext]="paymentMethod !== 'cash'">
+                <div *ngIf="paymentMethod === 'cash'" class="w-2.5 h-2.5 rounded-full bg-primary animate-scale-in"></div>
+            </div>
+
+            <input type="radio" name="payment" value="cash" [ngModel]="paymentMethod" (ngModelChange)="onMethodChange('cash')" class="hidden">
+        </label>
+
+        @if (paymentMethod === 'cash') {
+            <div class="p-4 bg-background rounded-xl">
+                <label class="text-sm text-subtext mb-2 block font-medium">Precisa de troco para quanto?</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-white font-bold">R$</span>
+                    <input type="number" [ngModel]="changeFor" (ngModelChange)="onChangeFor($event)" placeholder="Ex: 50,00"
+                            class="w-full bg-card border border-gray rounded-xl py-3.5 pl-12 pr-4 text-white outline-none focus:border-primary transition-colors placeholder:text-subtext/50 font-medium">
+                </div>
+            </div>
+        }
+
+        <label class="flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all duration-300 group"
+                [class.border-primary]="paymentMethod === 'card'"
+                [class.bg-primary/5]="paymentMethod === 'card'"
+                [class.border-gray]="paymentMethod !== 'card'"
+                [class.bg-background]="paymentMethod !== 'card'">
+
+            <div class="flex items-center gap-4">
+                <lucide-icon name="credit-card" [class.text-primary]="paymentMethod === 'card'" [class.text-subtext]="paymentMethod !== 'card'" class="w-6 h-6 transition-colors"></lucide-icon>
+                <span class="font-bold text-sm" [class.text-white]="paymentMethod === 'card'" [class.text-subtext]="paymentMethod !== 'card'">Maquininha de cartão</span>
+            </div>
+
+            <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors"
+                    [class.border-primary]="paymentMethod === 'card'"
+                    [class.border-subtext]="paymentMethod !== 'card'">
+                <div *ngIf="paymentMethod === 'card'" class="w-2.5 h-2.5 rounded-full bg-primary animate-scale-in"></div>
+            </div>
+
+            <input type="radio" name="payment" value="card" [ngModel]="paymentMethod" (ngModelChange)="onMethodChange('card')" class="hidden">
+        </label>
+
+        <label class="flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all duration-300 group"
+                [class.border-primary]="paymentMethod === 'pix'"
+                [class.bg-primary/5]="paymentMethod === 'pix'"
+                [class.border-gray]="paymentMethod !== 'pix'"
+                [class.bg-background]="paymentMethod !== 'pix'">
+            
+            <div class="flex items-center gap-4">
+                <lucide-icon name="qr-code" [class.text-primary]="paymentMethod === 'pix'" [class.text-subtext]="paymentMethod !== 'pix'" class="w-6 h-6 transition-colors"></lucide-icon>
+                <span class="font-bold text-sm" [class.text-white]="paymentMethod === 'pix'" [class.text-subtext]="paymentMethod !== 'pix'">Pagar com Pix</span>
+            </div>
+
+            <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors"
+                    [class.border-primary]="paymentMethod === 'pix'"
+                    [class.border-subtext]="paymentMethod !== 'pix'">
+                <div *ngIf="paymentMethod === 'pix'" class="w-2.5 h-2.5 rounded-full bg-primary animate-scale-in"></div>
+            </div>
+
+            <input type="radio" name="payment" value="pix" [ngModel]="paymentMethod" (ngModelChange)="onMethodChange('pix')" class="hidden">
+        </label>
+    </div>
+</section>

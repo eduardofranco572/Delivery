@@ -1,0 +1,111 @@
+<div class="bg-card border border-gray rounded-[2rem] flex flex-col shadow-2xl max-w-lg w-full max-h-[90vh] animate-scale-x-in overflow-hidden mx-auto">
+    <div class="flex justify-between items-center p-5 sm:p-6 border-b border-gray shrink-0">
+        <div class="flex items-center gap-3">
+            <h3 class="text-lg sm:text-xl font-bold text-white">Detalhes do Pedido Nº {{ order.id }}</h3>
+            
+            <span [class]="statusInfo.class + ' px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold border uppercase tracking-wider'">
+                {{ statusInfo.label }}
+            </span>
+        </div>
+
+        <button (click)="close()" class="text-subtext hover:text-white transition-colors p-2 rounded-full hover:bg-gray cursor-pointer">
+            <lucide-icon name="x" class="w-5 h-5 sm:w-6 sm:h-6"></lucide-icon>
+        </button>
+    </div>
+
+    <div class="p-5 sm:p-6 overflow-y-auto scrollbar-hide flex flex-col gap-6">
+        <div class="flex flex-col gap-4">
+            <h4 class="text-white font-bold border-b border-gray pb-2">Itens</h4>
+    
+            @for (item of order.items; track item.id) {
+                <div class="flex gap-4 group">
+                    <div class="w-16 h-16 rounded-xl overflow-hidden bg-background border border-gray shrink-0">
+                        <img [src]="item.product.prodImageUrl" [alt]="item.product.prodName" class="w-full h-full object-cover">
+                    </div>
+
+                    <div class="flex-1 flex flex-col">
+                        <div class="flex justify-between items-start gap-2">
+                            <h5 class="text-white font-bold text-sm">{{ item.product.prodName }}</h5>
+                        </div>
+
+                        <span class="text-subtext text-xs mb-1">Quantidade: {{ item.quantity }}</span>
+                        
+                        @if (item.preferences.length > 0 || item.observation) {
+                            <div class="flex flex-col gap-1 border-l-2 border-gray pl-3 mt-1">
+                                @for (pref of item.preferences; track pref.id) {
+                                    <span class="text-subtext text-xs flex items-center gap-1">
+                                        <span class="text-primary">+</span> 1x {{ pref.prefName }}
+                                    </span>
+                                }
+
+                                @if (item.observation) {
+                                    <span class="text-subtext text-xs italic mt-1">Obs: {{ item.observation }}</span>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="border-b border-gray/50 last:hidden"></div>
+            }
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <h4 class="text-white font-bold border-b border-gray pb-2">Endereço de Entrega</h4>
+            
+            <div class="flex items-start gap-3">
+                <lucide-icon name="map-pin" class="w-5 h-5 text-primary shrink-0 mt-0.5"></lucide-icon>
+                
+                <div class="flex flex-col">
+                    <span class="text-white font-medium text-sm">{{ parsedAddress?.street }}, {{ parsedAddress?.number }}</span>
+                    
+                    <span class="text-subtext text-xs mt-0.5">{{ parsedAddress?.neighborhood }} - {{ parsedAddress?.city }}/{{ parsedAddress?.state }}</span>
+                    
+                    @if (parsedAddress?.type) {
+                        <span class="text-subtext text-xs mt-0.5">Ref: {{ parsedAddress?.type }}</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <h4 class="text-white font-bold border-b border-gray pb-2">Pagamento</h4>
+            
+            <div class="flex flex-col gap-2 text-sm mt-1">
+                <div class="flex justify-between items-center text-subtext">
+                    <span>Método</span>
+                    <span class="uppercase font-medium text-white">{{ order.paymentMethod }}</span>
+                </div>
+
+                <div class="flex justify-between items-center text-subtext">
+                    <span>Subtotal</span>
+                    <span>R$ {{ order.subtotal | number:'1.2-2' }}</span>
+                </div>
+
+                <div class="flex justify-between items-center text-subtext">
+                    <span>Taxa de entrega</span>
+                    <span>R$ {{ order.freightValue | number:'1.2-2' }}</span>
+                </div>
+
+                <div class="border-t border-gray border-dashed my-1"></div>
+
+                <div class="flex justify-between items-center">
+                    <span class="text-white font-bold">Total</span>
+                    <span class="text-green font-bold text-lg">R$ {{ order.total | number:'1.2-2' }}</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @if (canCancel) {
+        <div class="p-5 sm:p-6 border-t border-gray bg-card shrink-0">
+            <button 
+                (click)="cancelOrder()" 
+                [disabled]="isCancelling"
+                class="w-full py-3.5 rounded-xl border border-red-500 text-red-500 font-bold hover:bg-red-500/10 active:scale-[0.98] transition-all cursor-pointer flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed">
+                {{ isCancelling ? 'Cancelando...' : 'Cancelar Pedido' }}
+            </button>
+        </div>
+    }
+</div>

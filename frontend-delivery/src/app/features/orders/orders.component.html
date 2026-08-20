@@ -1,0 +1,60 @@
+<div class="min-h-screen bg-background pb-24">
+    <header class="sticky top-0 z-40 bg-[#110c08]/95 backdrop-blur-md border-b border-gray py-4 px-6 flex items-center gap-4 shadow-sm">
+        <button (click)="goBack()" class="w-10 h-10 rounded-full bg-card border border-gray flex items-center justify-center text-subtext hover:text-white transition-colors cursor-pointer">
+            <lucide-icon name="arrow-left" class="w-5 h-5"></lucide-icon>
+        </button>
+
+        <h1 class="text-xl font-bold text-white">Histórico de Pedidos</h1>
+    </header>
+
+    <main class="max-w-[800px] mx-auto px-4 sm:px-6 mt-8 flex flex-col gap-4">
+        
+        @if (isLoading) {
+            <div class="flex justify-center py-12">
+                <span class="text-subtext">Carregando pedidos...</span>
+            </div>
+        } @else if (orders.length === 0) {
+            <div class="flex flex-col items-center justify-center py-16 text-center bg-card border border-gray rounded-2xl">
+                <lucide-icon name="clipboard-list" class="w-16 h-16 text-subtext/40 mb-4"></lucide-icon>
+                <h2 class="text-lg font-bold text-white mb-2">Nenhum pedido encontrado</h2>
+                <p class="text-subtext text-sm mb-6">Você ainda não realizou nenhum pedido em nossa loja.</p>
+                
+                <button routerLink="/home" class="px-6 py-3 rounded-full btn-primary-gradient text-white text-sm font-bold shadow-lg flex items-center gap-2 cursor-pointer hover:brightness-110 transition-all">
+                    Ver Cardápio
+                </button>
+            </div>
+        } @else {
+            @for (order of orders; track order.id) {
+                <div 
+                    (click)="openOrderDetails(order)" 
+                    class="bg-card border border-gray rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:border-primary/50 hover:-translate-y-0.5 transition-all duration-300 group">
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-full bg-background border border-gray flex items-center justify-center shrink-0 transition-colors group-hover:border-primary/50">
+                            <lucide-icon name="shopping-bag" class="w-6 h-6 text-subtext group-hover:text-primary transition-colors"></lucide-icon>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <h3 class="text-white font-bold text-base sm:text-lg">Pedido Nº {{ order.id }}</h3>
+                            <span class="text-subtext text-xs sm:text-sm mt-0.5">{{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+                           
+                            <span class="text-subtext text-xs sm:text-sm mt-1 flex items-center gap-1">
+                                <lucide-icon name="clipboard-list" class="w-3 h-3"></lucide-icon>
+                                {{ order.items?.length || 0 }} {{ order.items?.length === 1 ? 'item' : 'itens' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 border-t sm:border-t-0 border-gray pt-3 sm:pt-0">
+                        <span class="text-white font-bold text-sm sm:text-base">R$ {{ order.total | number:'1.2-2' }}</span>
+                        
+                        <span [class]="getStatusConfig(order.status).class + ' px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold border uppercase tracking-wider'">
+                            {{ getStatusConfig(order.status).label }}
+                        </span>
+                    </div>
+
+                </div>
+            }
+        }
+    </main>
+</div>

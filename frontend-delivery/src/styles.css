@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --color-background: #110c08;
+    --color-card: 30 23 18;
+    --color-primary: 249 125 20;
+    --color-green: #55C975;
+    --color-subtext: #ACA79D;
+    --color-gray: #2a2520;
+    --gradient-brand: linear-gradient(135deg, rgb(255, 137, 51), rgb(237, 81, 46));
+}
+
+body {
+    background-color: var(--color-background);
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+}
+
+
+@layer components {
+    .btn-primary-gradient {
+        background: linear-gradient(135deg, #ff8600, #f76046);
+        box-shadow: 0 12px 40px -12px oklch(72% 0.18 52 / 0.5);
+    }
+    
+    .btn-primary-gradient:hover {
+        box-shadow: 0 16px 40px -12px oklch(72% 0.18 52 / 0.7);
+        filter: brightness(1.1);
+    }
+}
+
+.checkmark {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 3;
+    stroke: var(--color-green);
+    stroke-miterlimit: 10;
+    box-shadow: inset 0px 0px 0px var(--color-green);
+    animation: fill-glow .4s ease-in-out .4s forwards, scale-pop .3s ease-in-out .9s both;
+}
+
+.checkmark__circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 3;
+    stroke-miterlimit: 10;
+    stroke: var(--color-green);
+    fill: none;
+    animation: draw-stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark__check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    animation: draw-stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes draw-stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes scale-pop {
+    0%, 100% {
+        transform: none;
+    }
+    50% {
+        transform: scale3d(1.15, 1.15, 1);
+    }
+}
+
+@keyframes fill-glow {
+    100% {
+        box-shadow: inset 0px 0px 0px 100px rgba(85, 201, 117, 0.1); 
+    }
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-gray) transparent;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-gray);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-subtext);
+}
+
+@media screen and (max-width: 320px) {
+    html {
+        font-size: 14px; 
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    html {
+        font-size: 18px; 
+    }
+}
+
+@media screen and (min-width: 2000px) {
+    html {
+        font-size: 36px;
+    }
+}
+
+@media screen and (min-width: 3000px) {
+    html {
+        font-size: 52px;
+    }
+}

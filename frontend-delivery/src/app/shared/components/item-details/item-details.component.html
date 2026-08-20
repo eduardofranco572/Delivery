@@ -1,0 +1,53 @@
+<div class="w-full h-full bg-card flex flex-col border-l border-gray">
+    @if (product) {
+        <div class="relative h-64 w-full bg-card shrink-0">
+            <img [src]="product.prodImageUrl" [alt]="product.prodName" class="w-full h-full object-cover" />
+            <button class="absolute top-4 right-4 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-gray transition-colors cursor-pointer" (click)="closeModal()">
+                <lucide-icon name="x" class="w-6 h-6"></lucide-icon>
+            </button>
+        </div>
+        
+        <!-- O Miolo continua idêntico -->
+        <div class="flex-1 overflow-y-auto scrollbar-hide p-6">
+            <!-- Título, Descrição, Grupos de Preferências e Textarea (exatamente o que você já tinha) -->
+             <div class="mb-6">
+                 <h2 class="text-2xl font-bold text-white mb-2">{{ product.prodName }}</h2>
+                 <p class="text-subtext text-sm leading-relaxed">{{ product.prodDescription }}</p>
+             </div>
+             @for (group of preferenceGroups; track group.id) {
+                 <div class="mb-4 flex justify-between items-center border-b border-gray pb-2 mt-6">
+                     <h3 class="text-white font-bold tracking-wide uppercase">{{ group.name }}</h3>
+                     <span class="text-subtext text-xs uppercase tracking-wider">Opcional</span>
+                 </div>
+                 <div class="flex flex-col gap-3 mb-4">
+                     @for (pref of group.preferences; track pref.id) {
+                         <div class="flex justify-between items-center p-4 bg-background border rounded-xl cursor-pointer hover:border-primary/50 transition-all duration-300" (click)="togglePreference(pref)" [class.border-primary]="isSelected(pref)" [class.border-gray]="!isSelected(pref)">
+                             <span class="text-white font-medium">{{ pref.prefName }}</span>
+                             <span class="text-primary font-medium text-sm">+ R$ {{ (pref.prefPrice || 0) | number:'1.2-2' }}</span>
+                         </div>
+                     }
+                 </div>
+             }
+             <div class="mb-4 flex justify-between items-center border-b border-gray pb-2">
+                 <h3 class="text-white font-bold tracking-wide">OBSERVAÇÕES</h3>
+             </div>
+             <textarea [(ngModel)]="observations" placeholder="Ex: sem cebola, ponto da carne..." class="w-full bg-background border border-gray rounded-xl p-4 text-white outline-none focus:border-primary transition-colors placeholder:text-subtext resize-none h-24"></textarea>
+        </div>
+
+        <div class="p-4 sm:p-6 border-t border-gray bg-card shrink-0 pb-6 sm:pb-8">
+            <div class="flex items-center gap-3 sm:gap-4">
+                <div class="flex items-center justify-between bg-background border border-gray rounded-full w-24 sm:w-[6.5rem] h-12 p-1 shrink-0">
+                    <button class="w-8 h-full flex items-center justify-center text-subtext hover:text-white transition-colors cursor-pointer text-xl pb-0.5" (click)="decreaseQty()">-</button>
+                    <span class="text-white font-medium text-sm">{{ quantity }}</span>
+                    <button class="w-8 h-full flex items-center justify-center text-subtext hover:text-white transition-colors cursor-pointer text-xl pb-0.5" (click)="increaseQty()">+</button>
+                </div>
+                
+                <!-- Alterado o clique para confirm() -->
+                <button class="flex-1 btn-primary-gradient text-white rounded-full flex justify-between items-center h-12 px-4 sm:px-5 cursor-pointer hover:brightness-110 active:scale-[0.98] transition-all overflow-hidden" (click)="confirm()">
+                    <span class="text-sm font-medium truncate mr-2">Adicionar ao carrinho</span>
+                    <span class="text-sm font-medium whitespace-nowrap">R$ {{ calculateTotal() | number:'1.2-2' }}</span>
+                </button>
+            </div>
+        </div>
+    }
+</div>

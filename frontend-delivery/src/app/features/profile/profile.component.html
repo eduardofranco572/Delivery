@@ -1,0 +1,85 @@
+<div class="min-h-screen bg-background pb-24">
+    <header class="sticky top-0 z-40 bg-[#110c08]/95 backdrop-blur-md border-b border-gray py-4 px-6 flex items-center gap-4 shadow-sm">
+        <button (click)="goBack()" class="w-10 h-10 rounded-full bg-card border border-gray flex items-center justify-center text-subtext hover:text-white transition-colors cursor-pointer">
+            <lucide-icon name="arrow-left" class="w-5 h-5"></lucide-icon>
+        </button>
+
+        <h1 class="text-xl font-bold text-white">Meu Perfil</h1>
+    </header>
+
+    <main class="max-w-[50rem] mx-auto px-4 sm:px-6 mt-8 flex flex-col gap-8">
+        <section class="bg-card border border-gray rounded-2xl p-6 shadow-lg">
+            <div class="flex items-center gap-3 mb-6 border-b border-gray pb-4">
+                <lucide-icon name="user" class="w-6 h-6 text-primary"></lucide-icon>
+                <h2 class="text-lg font-bold text-white">Dados Pessoais</h2>
+            </div>
+
+            <form [formGroup]="userForm" (ngSubmit)="saveUser()" class="flex flex-col gap-6">
+                <app-form-input formControlName="name" label="Nome" placeholder="Seu nome">
+                    <lucide-icon icon name="user" class="h-5 w-5"></lucide-icon>
+                </app-form-input>
+                
+                <app-form-input formControlName="email" type="email" label="E-mail" placeholder="voce@email.com">
+                    <lucide-icon icon name="mail" class="h-5 w-5"></lucide-icon>
+                </app-form-input>
+
+                <div class="flex flex-col sm:flex-row gap-4 mt-2">
+                    <button type="submit" [disabled]="userForm.invalid || isSavingUser" class="flex-1 py-4 rounded-xl font-bold text-white transition-all btn-primary-gradient disabled:opacity-50">
+                        {{ isSavingUser ? 'Salvando...' : 'Salvar Alterações' }}
+                    </button>
+                    
+                    <button type="button" class="flex-1 py-4 rounded-xl font-bold border border-gray text-white hover:bg-background transition-all">
+                        Trocar Senha
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="bg-card border border-gray rounded-2xl p-6 shadow-lg">
+            <div class="flex items-center gap-3 mb-6 border-b border-gray pb-4">
+                <lucide-icon name="map-pin" class="w-6 h-6 text-primary"></lucide-icon>
+                <h2 class="text-lg font-bold text-white">Meus Endereços</h2>
+            </div>
+
+            @if (isLoadingAddresses) {
+                <div class="flex justify-center py-6 text-subtext">Carregando endereços...</div>
+            } @else {
+                @if (defaultAddress) {
+                    <div class="flex items-start gap-4 p-5 bg-background border border-primary/50 rounded-xl mb-6">
+                        <div class="mt-1 shrink-0">
+                            <div class="w-10 h-10 rounded-full border border-primary text-primary flex items-center justify-center">
+                                <lucide-icon name="map-pin" class="w-5 h-5 fill-primary/20"></lucide-icon>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[10px] font-bold uppercase tracking-wider bg-primary/20 text-primary px-2 py-0.5 rounded-md">Principal</span>
+                            </div>
+
+                            <span class="text-white font-bold text-base">{{ defaultAddress.street }}, {{ defaultAddress.number }}</span>
+                            <span class="text-subtext text-sm mt-0.5">{{ defaultAddress.type }} • {{ defaultAddress.neighborhood }}</span>
+                            <span class="text-subtext text-xs mt-0.5">{{ defaultAddress.city }} - {{ defaultAddress.state }}</span>
+                        </div>
+                    </div>
+                } @else {
+                    <div class="flex flex-col items-center justify-center py-6 text-center bg-background border border-dashed border-gray rounded-xl mb-6">
+                        <p class="text-subtext text-sm">Nenhum endereço principal definido.</p>
+                    </div>
+                }
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button (click)="openAddressList()" class="flex-1 py-4 rounded-xl font-bold border border-gray text-white hover:bg-background transition-all flex items-center justify-center gap-2">
+                        <lucide-icon name="clipboard-list" class="w-5 h-5"></lucide-icon>
+                        Ver todos endereços
+                    </button>
+
+                    <button (click)="openAddressForm()" class="flex-1 py-4 rounded-xl font-bold text-white transition-all btn-primary-gradient flex items-center justify-center gap-2">
+                        <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
+                        Cadastrar Novo
+                    </button>
+                </div>
+            }
+        </section>
+    </main>
+</div>

@@ -1,0 +1,51 @@
+<section class="bg-card border border-gray rounded-2xl p-6 shadow-lg">
+    <div class="flex items-center gap-3 mb-6 border-b border-gray pb-4">
+        <lucide-icon name="shopping-bag" class="w-6 h-6 text-primary"></lucide-icon>
+        <h2 class="text-lg font-bold text-white">Detalhes do Pedido</h2>
+    </div>
+
+    @if (isLoading) {
+        <div class="flex justify-center py-8">
+            <span class="text-subtext">Carregando detalhes...</span>
+        </div>
+    } @else {
+        <div class="flex flex-col gap-6">
+            @for (item of items; track item.cartItemId) {
+                <div class="flex gap-4 group">
+                    <div class="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-xl overflow-hidden bg-background border border-gray">
+                        <img [src]="item.product.prodImageUrl" [alt]="item.product.prodName" class="w-full h-full object-cover">
+                    </div>
+
+                    <div class="flex-1 flex flex-col">
+                        <div class="flex justify-between items-start gap-2">
+                            <h3 class="text-white font-bold text-base">{{ item.product.prodName }}</h3>
+                        </div>
+
+                        <span class="text-subtext text-sm mb-2">Quantidade: {{ item.quantity }}</span>
+
+                        @if (item.preferences.length > 0 || item.observation) {
+                            <div class="flex flex-col gap-1 border-l-2 border-gray pl-3 mt-1 mb-3">
+                                @for (pref of item.preferences; track pref.id) {
+                                    <span class="text-subtext text-xs sm:text-sm flex items-center gap-1">
+                                        <span class="text-primary">+</span> 1x {{ pref.prefName }}
+                                        <span *ngIf="pref.prefPrice">(R$ {{ pref.prefPrice | number:'1.2-2' }})</span>
+                                    </span>
+                                }
+
+                                @if (item.observation) {
+                                    <span class="text-subtext text-xs sm:text-sm italic mt-1">Obs: {{ item.observation }}</span>
+                                }
+                            </div>
+                        }
+
+                        <div class="mt-auto">
+                            <span class="text-green font-bold">R$ {{ item.itemTotal | number:'1.2-2' }}</span>
+                        </div>
+                    </div> 
+                </div>
+
+                <div class="border-b border-gray last:hidden"></div>
+            }
+        </div>
+    }
+</section>

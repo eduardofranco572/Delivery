@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  password  String
+  userLogo  String?   @db.Text
+  createdAt DateTime  @default(now())
+  orders    Order[]
+  addresses Address[]
+}
+
+model Address {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cep          String   @default("")
+  street       String
+  number       String
+  neighborhood String
+  city         String
+  state        String?
+  type         String?
+  isDefault    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+
+model Company {
+  id              Int               @id @default(autoincrement())
+  empName         String
+  empNameFantasy  String
+  empCnpj         String            @unique
+  empAddress      String?
+  empStreet       String?
+  empNeighborhood String?
+  empCity         String?
+  empState        String?
+  empLogo         String?           @db.Text
+  empBanner       String?           @db.Text
+  createdAt       DateTime          @default(now())
+  empFreteBase    Float
+  categories      Category[]
+  products        Product[]
+  preferences     Preference[]
+  PreferenceGroup PreferenceGroup[]
+  orders          Order[]
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  catName   String
+  companyId Int
+  company   Company   @relation(fields: [companyId], references: [id])
+  products  Product[]
+}
+
+model PreferenceGroup {
+  id          Int          @id @default(autoincrement())
+  name        String
+  companyId   Int
+  company     Company      @relation(fields: [companyId], references: [id])
+  preferences Preference[]
+  products    Product[]
+}
+
+model Preference {
+  id                   Int                   @id @default(autoincrement())
+  prefCode             String                @unique
+  prefName             String
+  prefImg              String?               @db.Text
+  prefDescription      String?               @db.Text
+  prefQtd              Int?
+  prefPrice            Float?                @default(0)
+  prefType             String?
+  createdAt            DateTime              @default(now())
+  companyId            Int
+  company              Company               @relation(fields: [companyId], references: [id])
+  groups               PreferenceGroup[]
+  orderItemPreferences OrderItemPreference[]
+}
+
+model Product {
+  id                   Int               @id @default(autoincrement())
+  prodName             String
+  prodDescription      String?           @db.Text
+  prodImageUrl         String?           @db.Text
+  prodOriginalPrice    Float
+  prodPromotionalPrice Float?
+  prodRating           Float?            @default(0)
+  categoryId           Int
+  category             Category          @relation(fields: [categoryId], references: [id])
+  companyId            Int
+  company              Company           @relation(fields: [companyId], references: [id])
+  createdAt            DateTime          @default(now())
+  preferenceGroups     PreferenceGroup[]
+  orderItems           OrderItem[]
+}
+
+model Order {
+  id              Int         @id @default(autoincrement())
+  userId          Int
+  user            User        @relation(fields: [userId], references: [id])
+  companyId       Int
+  company         Company     @relation(fields: [companyId], references: [id])
+  status          String      @default("PENDING")
+  paymentMethod   String
+  changeFor       Float?
+  freightValue    Float
+  subtotal        Float
+  total           Float
+  deliveryAddress String?     @db.Text
+  createdAt       DateTime    @default(now())
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id          Int                   @id @default(autoincrement())
+  orderId     Int
+  order       Order                 @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   Int
+  product     Product               @relation(fields: [productId], references: [id])
+  quantity    Int
+  observation String?               @db.Text
+  itemTotal   Float
+  preferences OrderItemPreference[]
+}
+
+model OrderItemPreference {
+  id           Int        @id @default(autoincrement())
+  orderItemId  Int
+  orderItem    OrderItem  @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  preferenceId Int
+  preference   Preference @relation(fields: [preferenceId], references: [id])
+}
