@@ -1,0 +1,166 @@
+<div class="flex flex-col gap-8 pb-12">
+    <div>
+        <h2 class="text-3xl font-bold text-white mb-2">Perfil da Loja</h2>
+        <p class="text-subtext">Configure a identidade visual e os dados cadastrais da sua empresa.</p>
+    </div>
+
+    <section class="bg-card border border-gray rounded-2xl p-6 shadow-lg">
+        <h3 class="text-xl font-bold text-white mb-6 border-b border-gray pb-4">Identidade Visual</h3>
+        
+        <div class="relative w-full h-48 sm:h-64 rounded-xl border border-gray bg-background overflow-hidden cursor-pointer group" (click)="bannerInput.click()">
+            @if (bannerPreview) {
+                <img [src]="bannerPreview" class="w-full h-full object-cover">
+            } @else {
+                <div class="w-full h-full flex flex-col items-center justify-center text-subtext">
+                    <lucide-icon name="image" class="w-10 h-10 mb-2 opacity-50"></lucide-icon>
+                    <span>Adicionar Banner</span>
+                </div>
+            }
+
+            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <span class="text-white font-medium flex items-center gap-2">
+                    <lucide-icon name="pencil" class="w-4 h-4"></lucide-icon> Alterar Banner
+                </span>
+            </div>
+
+            <input type="file" #bannerInput class="hidden" (change)="onBannerSelected($event)" accept="image/*">
+        </div>
+
+        <div class="relative w-32 h-32 sm:w-40 sm:h-40 rounded-xl border-4 border-card bg-background -mt-16 sm:-mt-20 ml-6 sm:ml-8 overflow-hidden cursor-pointer group shadow-xl z-10" (click)="logoInput.click()">
+            @if (logoPreview) {
+                <img [src]="logoPreview" class="w-full h-full object-cover">
+            } @else {
+                <div class="w-full h-full flex flex-col items-center justify-center text-subtext">
+                    <lucide-icon name="image" class="w-8 h-8 mb-1 opacity-50"></lucide-icon>
+                    <span class="text-sm">Logo</span>
+                </div>
+            }
+
+            <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <span class="text-white font-medium text-sm flex flex-col items-center">
+                    <lucide-icon name="pencil" class="w-5 h-5 mb-1"></lucide-icon> Trocar
+                </span>
+            </div>
+
+            <input type="file" #logoInput class="hidden" (change)="onLogoSelected($event)" accept="image/*">
+        </div>
+    </section>
+
+    <form [formGroup]="companyForm" (ngSubmit)="saveCompany()">
+        <section class="bg-card border border-gray rounded-2xl p-6 shadow-lg flex flex-col gap-6">
+            <h3 class="text-xl font-bold text-white border-b border-gray pb-4">Dados Cadastrais</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="flex flex-col gap-1">
+                    <app-form-input 
+                        formControlName="empName" 
+                        label="Razão Social" 
+                        [hasIcon]="false"
+                        bgColor="bg-background"
+                    >
+                    </app-form-input>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                    <app-form-input 
+                        formControlName="empNameFantasy" 
+                        label="Nome Fantasia" 
+                        [hasIcon]="false"
+                        bgColor="bg-background"
+                    >
+                    </app-form-input>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="flex flex-col gap-1">
+                    <app-form-input 
+                        formControlName="empCnpj" 
+                        label="CNPJ" 
+                        [hasIcon]="false"
+                        bgColor="bg-background"
+                    >
+                    </app-form-input>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                    <app-form-input 
+                        formControlName="empFreteBase" 
+                        label="Valor Base de Frete (Km)" 
+                        type="number" 
+                        step="0.01"
+                        [hasIcon]="true"
+                        bgColor="bg-background"
+                    >
+                        <span icon class="font-bold text-white">R$</span>
+                        
+                    </app-form-input>       
+                </div>
+            </div>
+
+            <h4 class="text-lg font-bold text-white border-b border-gray pb-2 mt-4">Endereço</h4>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="flex flex-col gap-1">
+                    <app-form-input 
+                        formControlName="empCep" 
+                        label="CEP" 
+                        [hasIcon]="false" 
+                        bgColor="bg-background"
+                    >
+                    </app-form-input>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="flex flex-col gap-1 md:col-span-2">
+                    <app-form-input 
+                        formControlName="empStreet" 
+                        label="Rua" 
+                        [hasIcon]="false"
+                        bgColor="bg-background"
+                    >
+                    </app-form-input>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                    <app-form-input 
+                        formControlName="empNeighborhood" 
+                        label="Bairro" 
+                        [hasIcon]="false"
+                        bgColor="bg-background"
+                    >
+                    </app-form-input>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="flex flex-col gap-1">
+                    <app-form-input 
+                        formControlName="empCity" 
+                        label="Cidade" 
+                        [hasIcon]="false"
+                        bgColor="bg-background"
+                    >
+                    </app-form-input>
+                </div>
+                 
+                <div class="flex flex-col gap-1">
+                    <app-form-input 
+                        formControlName="empState" 
+                        label="UF"
+                        [hasIcon]="false"
+                        bgColor="bg-background"
+                    >
+                    </app-form-input>
+                </div>
+            </div>
+
+            <div class="flex justify-end mt-4">
+                <button type="submit" [disabled]="companyForm.invalid || isSaving" class="w-full sm:w-auto py-3.5 px-8 rounded-xl font-bold text-white transition-all btn-primary-gradient disabled:opacity-50 disabled:cursor-not-allowed">
+                    {{ isSaving ? 'Salvando...' : 'Salvar Alterações' }}
+                </button>
+            </div>
+        </section>
+    </form>
+</div>

@@ -1,4 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
@@ -6,7 +7,10 @@ import { SignupDto, LoginDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
-    constructor(private prisma: PrismaService) {}
+    constructor(
+        private prisma: PrismaService,
+        private configService: ConfigService
+    ) {}
 
     async signupService(userData: SignupDto) {
         const { name, email, password } = userData;
@@ -42,13 +46,16 @@ export class AuthService {
             throw new HttpException('E-mail ou senha incorretos.', HttpStatus.UNAUTHORIZED);
         }
 
+        const secret = this.configService.get<string>('JWT_SECRET')!;
+
         const token = jwt.sign(
             { 
-                id: user.id, 
+                id: user.id,   
                 name: user.name, 
-                email: user.email 
+                email: user.email,
+                isAdmin: user.isAdmin 
             },
-            process.env.JWT_SECRET as string,
+            secret,
             { expiresIn: '1d' }
         );
 

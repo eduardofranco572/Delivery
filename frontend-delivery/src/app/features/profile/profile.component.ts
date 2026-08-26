@@ -6,11 +6,13 @@ import { Dialog, DialogModule } from '@angular/cdk/dialog';
 
 import { FormInputComponent } from '../../shared/components/form-input/form-input.component';
 import { AuthService } from '../../core/services/auth.service';
-import { ProfileService } from './services/profile.service';
+import { ProfileService } from './profile.service';
 import { AlertService } from '../../core/services/alert.service';
 
 import { AddressListModalComponent } from './components/address-list-modal/address-list-modal.component';
 import { AddressFormModalComponent } from './components/address-form-modal/address-form-modal.component';
+
+import { Address } from '../../core/models/global.models';
 
 @Component({
     selector: 'app-profile',
@@ -20,8 +22,8 @@ import { AddressFormModalComponent } from './components/address-form-modal/addre
 })
 export class ProfileComponent implements OnInit {
     userForm: FormGroup;
-    addresses: any[] = [];
-    defaultAddress: any = null;
+    addresses: Address[] = [];
+    defaultAddress: Address | null = null;
     
     isSavingUser = false;
     isLoadingAddresses = true;

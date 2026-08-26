@@ -15,11 +15,15 @@ import { LucideAngularModule } from 'lucide-angular';
     }
   ]
 })
-
 export class FormInputComponent implements ControlValueAccessor {
     @Input() label: string = '';
     @Input() type: string = 'text';
     @Input() placeholder: string = '';
+    @Input() hasIcon: boolean = true;
+    @Input() step?: string;
+    @Input() maxlength?: string;
+    @Input() customClass: string = '';
+    @Input() bgColor: string = 'bg-card';
 
     value: string = '';
     isDisabled: boolean = false;

@@ -1,6 +1,9 @@
 <div class="min-h-screen bg-background pb-24">
     <header class="sticky top-0 z-40 bg-[#110c08]/95 backdrop-blur-md border-b border-gray py-4 px-6 flex items-center gap-4 shadow-sm">
-        <button (click)="goBack()" class="w-10 h-10 rounded-full bg-card border border-gray flex items-center justify-center text-subtext hover:text-white transition-colors cursor-pointer">
+        <button 
+            (click)="goBack()" 
+            class="w-10 h-10 rounded-full bg-card border border-gray flex items-center justify-center text-subtext hover:text-white transition-colors cursor-pointer"
+        >
             <lucide-icon name="arrow-left" class="w-5 h-5"></lucide-icon>
         </button>
 
@@ -22,7 +25,10 @@
                     </div>
 
                     @if (facade.addressState.userAddress()) {
-                        <button (click)="facade.addressState.openModal()" class="px-4 py-2 rounded-xl border border-primary text-primary text-sm font-medium hover:bg-primary/10 transition-colors cursor-pointer">
+                        <button 
+                            (click)="facade.addressState.openModal()" 
+                            class="px-4 py-2 rounded-xl border border-primary text-primary text-sm font-medium hover:bg-primary/10 transition-colors cursor-pointer"
+                        >
                             Trocar
                         </button>
                     }
@@ -37,8 +43,10 @@
                         </div>
 
                         <div class="flex flex-col">
-                            <span class="text-white font-bold text-base">{{ facade.addressState.userAddress().street }}, {{ facade.addressState.userAddress().number }}</span>
-                            <span class="text-subtext text-sm mt-0.5">{{ facade.addressState.userAddress().type }} • {{ facade.addressState.userAddress().neighborhood }}</span>
+                            <div class="flex flex-col">
+                                <span class="text-white font-bold text-base">{{ facade.addressState.userAddress()?.street }}, {{ facade.addressState.userAddress()?.number }}</span>
+                                <span class="text-subtext text-sm mt-0.5">{{ facade.addressState.userAddress()?.type }} • {{ facade.addressState.userAddress()?.neighborhood }}</span>
+                            </div>
                         </div>
                     </div>
                 } @else {
@@ -46,7 +54,10 @@
                         <lucide-icon name="map-pin" class="w-12 h-12 text-subtext/40 mb-3"></lucide-icon>
                         <p class="text-subtext text-sm mb-5">Nenhum endereço selecionado para entrega.</p>
                         
-                        <button (click)="facade.addressState.openModal()" class="px-6 py-3 rounded-full btn-primary-gradient text-white text-sm font-bold shadow-lg flex items-center gap-2 cursor-pointer hover:brightness-110 transition-all">
+                        <button 
+                            (click)="facade.addressState.openModal()" 
+                            class="px-6 py-3 rounded-full btn-primary-gradient text-white text-sm font-bold shadow-lg flex items-center gap-2 cursor-pointer hover:brightness-110 transition-all"
+                        >
                             <lucide-icon name="plus" class="w-4 h-4"></lucide-icon>
                             Adicionar Endereço
                         </button>
@@ -99,7 +110,7 @@
 
                     <button
                         class="w-full btn-primary-gradient text-white rounded-full flex justify-center items-center h-14 px-6 cursor-pointer hover:brightness-110 active:scale-[0.98] transition-all font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                        [disabled]="!facade.cartState.cartData().items?.length || facade.cartState.isLoading() || facade.isSubmitting() || !facade.addressState.userAddress() || facade.freightValue() === null"
+                        [disabled]="!facade.cartState.cartData().items.length || facade.cartState.isLoading() || facade.isSubmitting() || !facade.addressState.userAddress() || facade.freightValue() === null"
                         (click)="facade.placeOrder()">
                         {{ facade.isSubmitting() ? 'Enviando...' : 'Finalizar Pedido' }}
                     </button>

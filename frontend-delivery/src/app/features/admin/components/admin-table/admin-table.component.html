@@ -1,0 +1,60 @@
+<div class="bg-card border border-gray rounded-2xl overflow-hidden shadow-lg">
+    <div class="overflow-x-auto scrollbar-hide">
+        <table class="w-full text-left border-collapse min-w-[37rem]">
+            <thead>
+                <tr class="bg-background/50 border-b border-gray text-subtext text-xs uppercase tracking-wider font-bold">
+                    @for (col of columns; track col.key) {
+                        <th class="p-5" [class.text-right]="col.type === 'currency'">{{ col.label }}</th>
+                    }
+                </tr>
+            </thead>
+
+            <tbody class="text-sm">
+                @for (item of data; track item.id) {
+                    <tr 
+                        (click)="onRowClick(item)" 
+                        class="hover:bg-primary/5 transition-colors cursor-pointer group"
+                    >
+                        @for (col of columns; track col.key) {
+                            @if (!col.type || col.type === 'text') {
+                                <td class="p-5 text-subtext font-medium">{{ item[col.key] }}</td>
+                            }
+
+                            @if (col.type === 'currency') {
+                                <td class="p-5 text-green font-bold text-right text-base">
+                                    R$ {{ item[col.key] | number:'1.2-2' }}
+                                </td>
+                            }
+
+                            @if (col.type === 'image-text') {
+                                <td class="p-5">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 rounded-xl overflow-hidden border border-gray bg-background shrink-0">
+                                            <img 
+                                                [src]="item[col.imageKey!] ? (baseUrl + '/uploads/company/products/imgs/' + item[col.imageKey!]) : 'defaultProduct.png'"
+                                                class="w-full h-full object-cover"
+                                            >
+                                        </div>
+
+                                        <span class="text-white font-bold">{{ item[col.key] }}</span>
+                                    </div>
+                                </td>
+                            }
+                        }
+                    </tr>
+                }
+
+                @if (!isLoading && data.length === 0) {
+                    <tr>
+                        <td [attr.colspan]="columns.length" class="p-12 text-center">
+                            <div class="flex flex-col items-center justify-center text-subtext gap-3">
+                                <lucide-icon [name]="emptyIcon" class="w-12 h-12 opacity-30"></lucide-icon>
+                                <p>{{ emptyMessage }}</p>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

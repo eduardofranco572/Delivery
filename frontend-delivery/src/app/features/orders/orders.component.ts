@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { AuthService } from '../../core/services/auth.service';
-import { OrderService } from './services/order.service';
+import { OrderService } from './order.service';
 import { OrderResponse } from './models/order.models';
 import { OrderDetailsModalComponent } from './components/order-details-modal/order-details-modal.component';
 

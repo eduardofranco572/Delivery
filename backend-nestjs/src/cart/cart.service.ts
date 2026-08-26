@@ -45,7 +45,7 @@ export class CartService {
 
                 const backendUrl = process.env.BASE_URL || 'http://localhost:3000';
                 const prodImageUrl = product.prodImageUrl 
-                    ? `${backendUrl}/uploads/produtos/${product.id}/${product.prodImageUrl}`
+                    ? `${backendUrl}/uploads/company/products/imgs/${product.prodImageUrl}`
                     : 'defaultProduct.png';
 
                 return {

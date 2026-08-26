@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { AddCartItemDto } from './dto/cart.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -9,37 +9,37 @@ export class CartController {
     constructor(private readonly cartService: CartService) {}
 
    @Get(':userId')
-    async getUserCart(@Param('userId') userId: string) {
-        return this.cartService.getCart(Number(userId));
+    getUserCart(@Param('userId', ParseIntPipe) userId: number) {
+        return this.cartService.getCart(userId);
     }
 
     @Post(':userId/add')
-    async addItem(
-        @Param('userId') userId: string,
+    addItem(
+        @Param('userId', ParseIntPipe) userId: number,
         @Body() body: AddCartItemDto
     ) {
-        return this.cartService.addItemToCart(Number(userId), body);
+        return this.cartService.addItemToCart(userId, body);
     }
 
     @Post(':userId/item/:cartItemId/quantity')
-    async updateQuantity(
-        @Param('userId') userId: string,
+    updateQuantity(
+        @Param('userId', ParseIntPipe) userId: number,
         @Param('cartItemId') cartItemId: string,
         @Body() body: { quantity: number }
     ) {
-        return this.cartService.updateCartItemQuantity(Number(userId), cartItemId, body.quantity);
+        return this.cartService.updateCartItemQuantity(userId, cartItemId, body.quantity);
     }
 
     @Delete(':userId/item/:cartItemId')
-    async removeItem(
-        @Param('userId') userId: string,
+    removeItem(
+        @Param('userId', ParseIntPipe) userId: number,
         @Param('cartItemId') cartItemId: string
     ) {
-        return this.cartService.removeCartItem(Number(userId), cartItemId);
+        return this.cartService.removeCartItem(userId, cartItemId);
     }
 
     @Get(':userId/count')
-    async getCartCount(@Param('userId') userId: string) {
-        return this.cartService.getCartCount(Number(userId));
+    getCartCount(@Param('userId', ParseIntPipe) userId: number) {
+        return this.cartService.getCartCount(userId);
     }
 }

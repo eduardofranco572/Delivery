@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MenuComponent } from '../../shared/components/menu/menu.component';
+import { MenuComponent } from '../../core/layout/menu/menu.component';
 import { HeaderComponent } from './components/header/header.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';

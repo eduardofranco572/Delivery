@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { FlatpickrModule } from 'angularx-flatpickr';
 
 import {
     LucideAngularModule,
@@ -28,7 +29,17 @@ import {
     CreditCard,
     Banknote,
     CheckCircle,
-    Pencil
+    Pencil,
+    LayoutDashboard,
+    Layers,
+    Calendar,
+    Filter,
+    DollarSign,
+    Receipt,
+    Users,
+    TrendingUp,
+    Menu,
+    Image,
 } from 'lucide-angular';
 
 export const appConfig: ApplicationConfig = {
@@ -36,29 +47,40 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     importProvidersFrom(
-      LucideAngularModule.pick({
-          User,
-          Mail,
-          Lock,
-          Eye,
-          EyeOff,
-          ShoppingBag,
-          Flame,
-          ClipboardList,
-          Star,
-          Info,
-          MapPin,
-          Clock, X,
-          Search,
-          Plus,
-          Trash2,
-          ArrowLeft,
-          Wallet,
-          QrCode,
-          CreditCard,
-          Banknote,
-          CheckCircle,
-          Pencil
+        FlatpickrModule.forRoot(),
+        LucideAngularModule.pick({
+            User,
+            Mail,
+            Lock,
+            Eye,
+            EyeOff,
+            ShoppingBag,
+            Flame,
+            ClipboardList,
+            Star,
+            Info,
+            MapPin,
+            Clock, X,
+            Search,
+            Plus,
+            Trash2,
+            ArrowLeft,
+            Wallet,
+            QrCode,
+            CreditCard,
+            Banknote,
+            CheckCircle,
+            Pencil,
+            LayoutDashboard,
+            Layers,
+            Calendar,
+            Filter,
+            DollarSign,
+            Receipt,
+            Users,
+            TrendingUp,
+            Menu,
+            Image,
       })
     )
   ]

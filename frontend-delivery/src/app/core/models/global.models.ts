@@ -13,5 +13,14 @@ export interface Address {
 export interface CompanyInfo {
     id: number;
     empName: string;
+    empNameFantasy?: string;
+    empCnpj?: string;
+    empCep?: string;
+    empLogo?: string;
+    empBanner?: string;
     empFreteBase: number;
+    empStreet?: string;
+    empNeighborhood?: string;
+    empCity?: string;
+    empState?: string;
 }

@@ -1,7 +1,13 @@
 export interface Preference {
     id: number;
+    prefCode?: string;
     prefName: string;
+    prefType?: string;
+    prefDescription?: string;
+    prefQtd?: number | null;
     prefPrice?: number;
+    groupIds?: number[];
+    groups?: { id: number; name: string }[];
 }
 
 export interface PreferenceGroup {
@@ -23,7 +29,6 @@ export interface Product {
 export interface Category {
     id: number;
     catName: string;
-    companyId: number;
     products: Product[];
 }
 

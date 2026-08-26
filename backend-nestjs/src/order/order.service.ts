@@ -1,6 +1,7 @@
 import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CartService } from '../cart/cart.service';
+import { CheckoutDto } from './dto/order.dto';
 
 @Injectable()
 export class OrderService {
@@ -11,8 +12,8 @@ export class OrderService {
         private cartService: CartService
     ) {}
 
-    async createOrder(userId: number, payload: any) {
-        const { companyId, paymentMethod, changeFor, freightValue, address } = payload;
+    async createOrder(userId: number, payload: CheckoutDto) {
+        const { paymentMethod, changeFor, freightValue, address } = payload;
         const cart = await this.cartService.getCart(userId);
         
         if (!cart || cart.items.length === 0) {
@@ -27,9 +28,8 @@ export class OrderService {
                 const newOrder = await tx.order.create({
                     data: {
                         userId,
-                        companyId,
                         paymentMethod,
-                        changeFor: changeFor ? parseFloat(changeFor) : null,
+                        changeFor,
                         freightValue,
                         subtotal,
                         total,
@@ -95,7 +95,6 @@ export class OrderService {
         });
 
         const backendUrl = process.env.BASE_URL || 'http://localhost:3000';
-
         return orders.map(order => ({
             ...order,
             items: order.items.map(item => ({
@@ -106,10 +105,9 @@ export class OrderService {
                 product: {
                     ...item.product,
                     prodImageUrl: item.product.prodImageUrl
-                        ? `${backendUrl}/uploads/produtos/${item.product.id}/${item.product.prodImageUrl}`
+                        ? `${backendUrl}/uploads/company/products/imgs/${item.product.prodImageUrl}`
                         : 'defaultProduct.png'
                 },
-
                 preferences: item.preferences.map(p => p.preference)
             }))
         }));

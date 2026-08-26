@@ -1,11 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
-import { CartService } from './services/cart.service';
+import { CartService } from './cart.service';
 import { AuthService } from '../../core/services/auth.service';
 import { AlertService } from '../../core/services/alert.service';
 import { Router } from '@angular/router';
 import { DialogRef } from '@angular/cdk/dialog';
+import { CartResponse } from './models/cart.models'
 
 @Component({
     selector: 'app-cart',
@@ -14,7 +15,7 @@ import { DialogRef } from '@angular/cdk/dialog';
     templateUrl: './cart.component.html'
 })
 export class CartComponent implements OnInit {
-    cartData: any = { items: [], cartTotal: 0 };
+    cartData: CartResponse = { items: [], cartTotal: 0 };
     isLoading = false;
 
     constructor(

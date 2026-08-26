@@ -1,12 +1,13 @@
 import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { CartService } from '../../cart/services/cart.service';
+import { CartService } from '../../cart/cart.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { AlertService } from '../../../core/services/alert.service';
+import { CartResponse } from '../../cart/models/cart.models';
 
 @Injectable({ providedIn: 'root' })
 export class CheckoutCartService {
-    cartData = signal<any>({ items: [], cartTotal: 0 });
+    cartData = signal<CartResponse>({ items: [], cartTotal: 0 });
     isLoading = signal<boolean>(true);
 
     constructor(

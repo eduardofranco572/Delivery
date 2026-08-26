@@ -9,7 +9,6 @@ export class AuthController {
     @Post('signup')
     async signup(@Body() body: SignupDto) {
         const user = await this.authService.signupService(body);
-
         return { 
             message: 'Usuário criado com sucesso.', user 
         };

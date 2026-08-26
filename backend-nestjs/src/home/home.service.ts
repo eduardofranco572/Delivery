@@ -1,36 +1,39 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class HomeService {
-    constructor(private prisma: PrismaService) {}
+    constructor(
+        private prisma: PrismaService,
+        private configService: ConfigService
+    ) {}
 
-    private formatProductImage(imageUrl: string | null, productId: number): string {
+    private formatProductImage(imageUrl: string | null): string {
         if (!imageUrl) {
             return 'defaultProduct.png';
         }
 
-        const backendUrl = process.env.BASE_URL || 'http://localhost:3000';
-
-        return `${backendUrl}/uploads/produtos/${productId}/${imageUrl}`;
+        const backendUrl = this.configService.get<string>('BASE_URL');
+        
+        return `${backendUrl}/uploads/company/products/imgs/${imageUrl}`;
     }
 
-    async getCatalogService(companyId: number) {
+    async getCatalogService() {
         const categories = await this.prisma.category.findMany({
-            where: { companyId },
             include: {
                 products: { 
-                    take: 20, 
-                    orderBy: { prodRating: 'desc' } 
-                },
+                     take: 20, 
+                     orderBy: { prodRating: 'desc' } 
+                 },
             },
         });
-
+        
         return categories.map(category => ({
             ...category,
             products: category.products.map(product => ({
                 ...product,
-                prodImageUrl: this.formatProductImage(product.prodImageUrl, product.id),
+                prodImageUrl: this.formatProductImage(product.prodImageUrl),
             })),
         }));
     }
@@ -52,7 +55,7 @@ export class HomeService {
 
         return {
             ...product,
-            prodImageUrl: this.formatProductImage(product.prodImageUrl, product.id),
+            prodImageUrl: this.formatProductImage(product.prodImageUrl),
         };
     }
 }

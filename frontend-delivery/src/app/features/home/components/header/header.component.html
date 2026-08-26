@@ -1,15 +1,25 @@
 <header class="relative w-full h-[25rem] md:h-[28rem] mt-0 md:mt-[5.5rem] overflow-hidden">
-    <img src="compbanner.jpg" alt="Banner da Empresa" class="absolute inset-0 w-full h-full object-cover" />
+    <img 
+        [src]="bannerUrl" 
+        alt="Banner da Empresa" 
+        class="absolute inset-0 w-full h-full object-cover" 
+    />
     
     <div class="absolute inset-0 bg-gradient-to-t from-background via-background/80 md:via-background/60 to-transparent"></div>
     
     <div class="absolute bottom-0 left-0 w-full px-5 md:px-8 pb-8 md:pb-12 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 z-10">
         <div class="w-24 h-24 md:w-40 md:h-40 bg-card border border-gray rounded-2xl md:rounded-3xl flex items-center justify-center shrink-0 shadow-2xl relative overflow-hidden z-20">
-            <img src="complogo.jpg" alt="Logo da Empresa" class="w-full h-full object-cover" />
+            <img 
+                [src]="logoUrl" 
+                alt="Logo da Empresa" 
+                class="w-full h-full object-cover" 
+            />
         </div>
 
         <div class="flex-grow flex flex-col gap-2 md:gap-3 drop-shadow-md w-full">
-            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-tight">Fornalha</h2>
+            <h2 class="text-4xl md:text-6xl font-bold text-white tracking-tight">
+                {{ company?.empNameFantasy || company?.empName || 'Carregando...' }}
+            </h2>
 
             <div class="flex flex-wrap items-center gap-3 md:gap-5 text-[14px] md:text-[15px] font-medium mt-1">
                 <div class="flex items-center gap-1.5">
@@ -25,7 +35,7 @@
 
                 <div class="flex items-center gap-1.5 text-subtext w-full sm:w-auto mt-1 sm:mt-0">
                     <lucide-icon name="map-pin" class="w-4 h-4"></lucide-icon>
-                    <span class="truncate">Rua das Oliveiras, 240</span>
+                    <span class="truncate">{{ company?.empStreet || 'Endereço não cadastrado' }}</span>
                 </div>
             </div>
 
@@ -34,7 +44,10 @@
                     Aberto agora - fecha às 23h
                 </div>
                 
-                <button (click)="openDetailsModal()" class="flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-full border border-subtext text-subtext hover:text-white hover:border-white transition-all cursor-pointer bg-background/40 md:bg-background/20 backdrop-blur-sm">
+                <button 
+                    (click)="openDetailsModal()" 
+                    class="flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-full border border-subtext text-subtext hover:text-white hover:border-white transition-all cursor-pointer bg-background/40 md:bg-background/20 backdrop-blur-sm"
+                >
                     <lucide-icon name="info" class="w-4 h-4 md:w-5 md:h-5"></lucide-icon>
                 </button>
             </div>
@@ -45,29 +58,33 @@
 @if (isModalOpen) {
     <div class="fixed inset-0 z-[100] flex items-center justify-center px-4 bg-black/70 backdrop-blur-sm transition-opacity">
         <div class="bg-card w-full max-w-lg rounded-[24px] border border-gray shadow-2xl overflow-hidden flex flex-col">
-            
             <div class="flex justify-between items-center p-6 border-b border-gray">
                 <h3 class="text-xl font-bold text-white">Detalhes da Empresa</h3>
-                <button (click)="closeDetailsModal()" class="text-subtext hover:text-white transition-colors p-2 rounded-full hover:bg-gray cursor-pointer">
+
+                <button 
+                    (click)="closeDetailsModal()" 
+                    class="text-subtext hover:text-white transition-colors p-2 rounded-full hover:bg-gray cursor-pointer"
+                >
                     <lucide-icon name="x" class="w-6 h-6"></lucide-icon>
                 </button>
             </div>
-
+            
             <div class="p-6 flex flex-col gap-8">
                 <div class="flex gap-4">
                     <div class="mt-1">
                         <lucide-icon name="map-pin" class="w-6 h-6 text-primary"></lucide-icon>
                     </div>
+
                     <div>
                         <h4 class="text-white font-medium mb-1">Endereço</h4>
                         <p class="text-subtext text-sm leading-relaxed">
-                            Rua das Oliveiras, 240<br>
-                            Centro, Mogi Guaçu - SP<br>
-                            CEP: 13840-000
+                            {{ company?.empStreet }}<br>
+                            {{ company?.empNeighborhood }}, {{ company?.empCity }} - {{ company?.empState }}<br>
+                            CEP: {{ company?.empCep || 'Não informado' }}
                         </p>
                     </div>
                 </div>
-
+                
                 <div class="flex gap-4">
                     <div class="mt-1">
                         <lucide-icon name="clock" class="w-6 h-6 text-primary"></lucide-icon>

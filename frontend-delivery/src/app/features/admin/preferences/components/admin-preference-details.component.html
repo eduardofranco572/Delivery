@@ -1,0 +1,98 @@
+<div class="flex flex-col gap-6 pb-12">
+    <header class="flex items-center gap-4 border-b border-gray pb-6">
+        <button 
+            (click)="goBack()" 
+            class="w-10 h-10 rounded-full bg-card border border-gray flex items-center justify-center text-subtext hover:text-white hover:bg-gray transition-all cursor-pointer"
+        >
+            <lucide-icon name="arrow-left" class="w-5 h-5"></lucide-icon>
+        </button>
+        <h2 class="text-2xl font-bold text-white">{{ isEditMode ? 'Editando Preferência' : 'Cadastrar Nova Preferência' }}</h2>
+    </header>
+
+    <form 
+        [formGroup]="prefForm" 
+        (ngSubmit)="savePreference()" 
+        class="flex flex-col gap-6 max-w-4xl"
+    >
+        <div class="flex-1 flex flex-col gap-6">
+            <section class="bg-card border border-gray rounded-2xl p-6 shadow-lg">
+                <h3 class="text-lg font-bold text-white mb-6">Informações Básicas</h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <app-form-input 
+                        formControlName="prefCode" 
+                        label="Código" 
+                        [hasIcon]="false"
+                        bgColor="bg-background"
+                    >
+                    </app-form-input>
+
+                    <app-form-input 
+                        formControlName="prefName" 
+                        label="Nome da Preferência" 
+                        placeholder="Ex: Bacon Extra"
+                        [hasIcon]="false"
+                        bgColor="bg-background"
+                    >
+                    </app-form-input>
+
+                    <app-form-input 
+                        formControlName="prefType" 
+                        label="Tipo (Opcional)" 
+                        placeholder="Ex: Adicional, Ponto da Carne"
+                        [hasIcon]="false"
+                        bgColor="bg-background"
+                    >
+                    </app-form-input>
+                    
+                    <div class="flex flex-col gap-1">
+                        <label class="text-white text-sm font-medium">Valor Adicional (R$)</label>
+                        
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-subtext font-bold">R$</span>
+                        
+                            <input 
+                                formControlName="prefPrice" 
+                                type="text" 
+                                (input)="onPriceInput($event)" 
+                                placeholder="0,00" 
+                                class="w-full bg-background text-green font-bold border border-gray rounded-xl py-3 pl-12 pr-4 outline-none focus:border-primary transition-colors ng-untouched ng-pristine ng-valid"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-1 sm:col-span-2">
+                        <label class="text-white text-sm font-medium">Vincular aos Grupos</label>
+                        <ng-select 
+                            formControlName="groupIds" 
+                            [items]="preferenceGroups" 
+                            bindLabel="name" 
+                            bindValue="id" 
+                            [multiple]="true"
+                            placeholder="Selecione os grupos (Opcional)" 
+                            class="dark-theme">
+                        </ng-select>
+                    </div>
+
+                    <div class="flex flex-col gap-1 sm:col-span-2">
+                        <label class="text-white text-sm font-medium">Descrição (Opcional)</label>
+                        <textarea formControlName="prefDescription" class="w-full bg-background text-white border border-gray rounded-xl p-4 outline-none focus:border-primary transition-colors min-h-[100px] resize-none"></textarea>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-end gap-4 mt-2">
+            @if (isEditMode) {
+                <button type="button" (click)="deletePreference()" class="w-full sm:w-auto py-3.5 px-8 rounded-xl font-bold bg-red-500/10 text-red-500 border border-red-500/30 hover:bg-red-500 hover:text-white transition-all order-2 sm:order-1">
+                    Excluir Permanentemente
+                </button>
+            }
+            
+            <button type="submit" [disabled]="prefForm.invalid || isSaving" class="w-full sm:w-auto py-3.5 px-10 rounded-xl font-bold text-white transition-all btn-primary-gradient disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:brightness-110 active:scale-[0.98] order-1 sm:order-2">
+                {{ isSaving ? 'Salvando...' : 'Salvar Preferência' }}
+            </button>
+        </div>
+    </form>
+</div>

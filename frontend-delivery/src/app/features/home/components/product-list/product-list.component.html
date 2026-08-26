@@ -47,8 +47,10 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     @for (product of section.products; track product.id) {
-                        <div class="bg-card border border-gray rounded-2xl flex flex-col group hover:border-primary/50 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer overflow-hidden"
-                                    (click)="openProductDetails(product.id)">
+                        <div
+                            class="bg-card border border-gray rounded-2xl flex flex-col group hover:border-primary/50 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer overflow-hidden"
+                            (click)="openProductDetails(product.id)"
+                        >
                             <div class="relative w-full h-48 overflow-hidden">
                                 <img 
                                     [src]="product.prodImageUrl" 

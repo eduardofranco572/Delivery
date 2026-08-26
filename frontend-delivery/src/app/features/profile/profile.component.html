@@ -1,6 +1,9 @@
 <div class="min-h-screen bg-background pb-24">
     <header class="sticky top-0 z-40 bg-[#110c08]/95 backdrop-blur-md border-b border-gray py-4 px-6 flex items-center gap-4 shadow-sm">
-        <button (click)="goBack()" class="w-10 h-10 rounded-full bg-card border border-gray flex items-center justify-center text-subtext hover:text-white transition-colors cursor-pointer">
+        <button 
+            (click)="goBack()" 
+            class="w-10 h-10 rounded-full bg-card border border-gray flex items-center justify-center text-subtext hover:text-white transition-colors cursor-pointer"
+        >
             <lucide-icon name="arrow-left" class="w-5 h-5"></lucide-icon>
         </button>
 
@@ -24,11 +27,18 @@
                 </app-form-input>
 
                 <div class="flex flex-col sm:flex-row gap-4 mt-2">
-                    <button type="submit" [disabled]="userForm.invalid || isSavingUser" class="flex-1 py-4 rounded-xl font-bold text-white transition-all btn-primary-gradient disabled:opacity-50">
+                    <button 
+                        type="submit" 
+                        [disabled]="userForm.invalid || isSavingUser" 
+                        class="flex-1 py-4 rounded-xl font-bold text-white transition-all btn-primary-gradient disabled:opacity-50"
+                    >
                         {{ isSavingUser ? 'Salvando...' : 'Salvar Alterações' }}
                     </button>
                     
-                    <button type="button" class="flex-1 py-4 rounded-xl font-bold border border-gray text-white hover:bg-background transition-all">
+                    <button 
+                        type="button" 
+                        class="flex-1 py-4 rounded-xl font-bold border border-gray text-white hover:bg-background transition-all"
+                    >
                         Trocar Senha
                     </button>
                 </div>
@@ -54,7 +64,7 @@
 
                         <div class="flex flex-col flex-1">
                             <div class="flex items-center gap-2 mb-1">
-                                <span class="text-[10px] font-bold uppercase tracking-wider bg-primary/20 text-primary px-2 py-0.5 rounded-md">Principal</span>
+                                <span class="text-[0.6rem] font-bold uppercase tracking-wider bg-primary/20 text-primary px-2 py-0.5 rounded-md">Principal</span>
                             </div>
 
                             <span class="text-white font-bold text-base">{{ defaultAddress.street }}, {{ defaultAddress.number }}</span>
@@ -69,12 +79,18 @@
                 }
 
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <button (click)="openAddressList()" class="flex-1 py-4 rounded-xl font-bold border border-gray text-white hover:bg-background transition-all flex items-center justify-center gap-2">
+                    <button 
+                        (click)="openAddressList()" 
+                        class="flex-1 py-4 rounded-xl font-bold border border-gray text-white hover:bg-background transition-all flex items-center justify-center gap-2"
+                    >
                         <lucide-icon name="clipboard-list" class="w-5 h-5"></lucide-icon>
                         Ver todos endereços
                     </button>
 
-                    <button (click)="openAddressForm()" class="flex-1 py-4 rounded-xl font-bold text-white transition-all btn-primary-gradient flex items-center justify-center gap-2">
+                    <button 
+                        (click)="openAddressForm()" 
+                        class="flex-1 py-4 rounded-xl font-bold text-white transition-all btn-primary-gradient flex items-center justify-center gap-2"
+                    >
                         <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
                         Cadastrar Novo
                     </button>

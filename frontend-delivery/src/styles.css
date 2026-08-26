@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
+@import 'vendors-custom.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,7 +10,7 @@
     --color-primary: 249 125 20;
     --color-green: #55C975;
     --color-subtext: #ACA79D;
-    --color-gray: #2a2520;
+    --color-gray: #2a2520; 
     --gradient-brand: linear-gradient(135deg, rgb(255, 137, 51), rgb(237, 81, 46));
 }
 
@@ -131,3 +131,5 @@ body {
         font-size: 52px;
     }
 }
+
+

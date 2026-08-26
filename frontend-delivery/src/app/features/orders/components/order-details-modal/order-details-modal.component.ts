@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { LucideAngularModule } from 'lucide-angular';
 import { OrderResponse } from '../../models/order.models';
-import { OrderService } from '../../services/order.service';
+import { OrderService } from '../../order.service';
 import { AlertService } from '../../../../core/services/alert.service';
 
 @Component({

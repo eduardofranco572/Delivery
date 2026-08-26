@@ -34,7 +34,7 @@ export class LoginComponent {
         });
     }
 
-   onSubmitForm() {
+    onSubmitForm() {
         if (this.loginForm.invalid) {
              this.alertService.warning(
                 'Atenção', 

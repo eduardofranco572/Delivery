@@ -1,11 +1,12 @@
 import { Injectable, signal } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { CheckoutApiService } from './checkout-api.service';
+import { Address } from '../../../core/models/global.models';
 
 @Injectable({ providedIn: 'root' })
 export class CheckoutAddressService {
-    addresses = signal<any[]>([]);
-    userAddress = signal<any>(null);
+    addresses = signal<Address[]>([]);
+    userAddress = signal<Address | null>(null);
     showAddressModal = signal<boolean>(false);
 
     constructor(

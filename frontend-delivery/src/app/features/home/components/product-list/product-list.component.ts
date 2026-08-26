@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 
-import { HomeService } from '../../services/home.service';
-import { CartService } from '../../../cart/services/cart.service'
+import { HomeService } from '../../home.service';
+import { CartService } from '../../../cart/cart.service'
 import { AuthService } from '../../../../core/services/auth.service';
 import { AlertService } from '../../../../core/services/alert.service';
 import { ItemDetailsComponent } from '../../../../shared/components/item-details/item-details.component';

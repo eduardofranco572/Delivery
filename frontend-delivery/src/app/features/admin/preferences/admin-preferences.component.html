@@ -1,0 +1,50 @@
+<div class="flex flex-col gap-6 pb-12">
+    <div>
+        <h2 class="text-3xl font-bold text-white mb-1">Preferências</h2>
+        <p class="text-subtext">Gerencie os adicionais, complementos e variações</p>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-4 items-center">
+        <div class="relative w-full flex-1">
+            <lucide-icon name="search" class="absolute left-[0.6rem] top-1/2 -translate-y-1/2 w-5 h-5 text-subtext"></lucide-icon>
+            <input 
+                type="text" 
+                (input)="onSearch($event)"
+                placeholder="Buscar preferência..." 
+                class="w-full bg-background text-white border border-gray rounded-xl py-3.5 pl-12 pr-4 outline-none focus:border-primary transition-colors"
+            >
+        </div>
+        
+        <button 
+            (click)="goToNew()" 
+            class="w-full sm:w-auto py-3.5 px-6 rounded-xl font-bold text-white btn-primary-gradient flex items-center justify-center gap-2 hover:brightness-110 transition-all"
+        >
+            <lucide-icon name="plus" class="w-5 h-5"></lucide-icon>
+            Nova Preferência
+        </button>
+    </div>
+
+    <app-admin-table 
+        [columns]="preferenceColumns" 
+        [data]="preferences" 
+        [isLoading]="isLoading"
+        emptyMessage="Nenhuma preferência encontrada."
+        emptyIcon="clipboard-list"
+        (rowClick)="goToEdit($event.id)">
+    </app-admin-table>
+
+    @if (hasMore) {
+        <div class="flex justify-center mt-4">
+            <button 
+                (click)="loadMore()" 
+                [disabled]="isLoadingMore"
+                class="px-8 py-3 rounded-full border border-gray bg-card text-subtext font-medium hover:text-white hover:border-primary transition-all disabled:opacity-50 cursor-pointer flex items-center gap-2">
+                @if (isLoadingMore) {
+                    <span>Carregando...</span>
+                } @else {
+                    <span>Carregar mais</span>
+                }
+            </button>
+        </div>
+    }
+</div>

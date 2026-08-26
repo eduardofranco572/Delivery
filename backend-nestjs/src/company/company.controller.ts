@@ -6,7 +6,7 @@ export class CompanyController {
     constructor(private readonly companyService: CompanyService) {}
 
     @Get(':id')
-    async getCompany(@Param('id') id: string) {
-        return this.companyService.getCompanyInfo(Number(id));
+    findOne(@Param('id') id: string) {
+        return this.companyService.findOne(Number(id));
     }
 }
