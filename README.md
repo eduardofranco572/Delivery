@@ -1,6 +1,6 @@
 # Delivery Platform Project
 
-O projeto é uma plataforma de delivery completa, dividida entre uma interface de cliente intuitiva e um robusto painel administrativo. Desenvolvida para treinar e eu aprender melhor as tecnologias do angular juntamente com nestjs  foco em performance, código limpo e padrões de projeto profissionais, separando responsabilidades através de uma arquitetura modular.
+O projeto é uma plataforma de delivery completa, dividida entre uma interface de cliente intuitiva e um painel administrativo. Desenvolvida para treinar e eu aprender melhor as tecnologias do angular juntamente com nestjs foco em performance, código limpo e padrões de projeto profissionais, separando responsabilidades através de uma arquitetura modular.
 
 <br>
     <img src="./imgs/home.jpeg" alt="Capa do Projeto">
@@ -83,7 +83,7 @@ O backend do projeto foi projetado com **NestJS**, seguindo uma arquitetura fort
 
 ### 1. Arquitetura Modular e Híbrida
 * **Módulos Independentes:** O código é dividido em domínios de negócio claros, facilitando a manutenção e a escalabilidade.
-* **REST & GraphQL:** A aplicação utiliza uma abordagem inteligente provendo APIs RESTful tradicionais via *Controllers* (para integrações padrão e uploads) em conjunto com *Resolvers* GraphQL para consultas flexíveis e otimizadas.
+* **REST & GraphQL:** A aplicação utiliza uma abordagem inteligente provendo APIs RESTful tradicionais via *Controllers* para integrações padrão e uploads e  com *Resolvers* GraphQL para algumas consultas.
 
 ### 2. Persistência de Dados e ORM (Prisma)
 * Modelagem de banco de dados relacional gerenciada pelo **Prisma ORM**.
