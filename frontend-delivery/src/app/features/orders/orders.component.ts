@@ -7,11 +7,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { OrderService } from './order.service';
 import { OrderResponse } from './models/order.models';
 import { OrderDetailsModalComponent } from './components/order-details-modal/order-details-modal.component';
+import { OrderStatusPipe } from '../../shared/pipes/order-status.pipe';
 
 @Component({
     selector: 'app-orders',
     standalone: true,
-    imports: [CommonModule, LucideAngularModule, RouterModule, DialogModule],
+    imports: [CommonModule, LucideAngularModule, RouterModule, DialogModule, OrderStatusPipe],
     templateUrl: './orders.component.html'
 })
 export class OrdersComponent implements OnInit {
@@ -61,40 +62,6 @@ export class OrdersComponent implements OnInit {
 
     goBack() {
         this.location.back();
-    }
-
-    getStatusConfig(status: string) {
-        switch(status) {
-            case 'PENDING': return { 
-                label: 'Aguardando', 
-                class: 'bg-primary/20 text-primary border-primary/30' 
-            };
-
-            case 'PREPARING': return { 
-                label: 'Preparando', 
-                class: 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30' 
-            };
-
-            case 'DELIVERING': return { 
-                label: 'Saiu p/ Entrega', 
-                class: 'bg-blue-500/20 text-blue-500 border-blue-500/30' 
-            };
-
-            case 'COMPLETED': return { 
-                label: 'Concluído', 
-                class: 'bg-green/20 text-green border-green/30' 
-            };
-            
-            case 'CANCELLED': return { 
-                label: 'Cancelado', 
-                class: 'bg-red-500/20 text-red-500 border-red-500/30' 
-            };
-
-            default: return { 
-                label: status, 
-                class: 'bg-gray text-subtext border-gray' 
-            };
-        }
     }
 
     openOrderDetails(order: OrderResponse) {

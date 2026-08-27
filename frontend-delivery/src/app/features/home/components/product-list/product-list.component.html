@@ -2,46 +2,33 @@
     <div class="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide w-full mb-2">
         <button 
             (click)="setCategory('Todos')"
-            [class.bg-brand-gradient]="activeCategory === 'Todos'"
-            [class.text-white]="activeCategory === 'Todos'"
-            [class.border-transparent]="activeCategory === 'Todos'"
-            [class.bg-card]="activeCategory !== 'Todos'"
-            [class.text-subtext]="activeCategory !== 'Todos'"
-            [class.border-gray]="activeCategory !== 'Todos'"
+            [class.bg-brand-gradient]="activeCategory() === 'Todos'"
+            [class.text-white]="activeCategory() === 'Todos'"
+            [class.border-transparent]="activeCategory() === 'Todos'"
+            [class.bg-card]="activeCategory() !== 'Todos'"
+            [class.text-subtext]="activeCategory() !== 'Todos'"
+            [class.border-gray]="activeCategory() !== 'Todos'"
             class="px-6 py-2.5 rounded-full whitespace-nowrap text-sm font-medium border hover:text-white transition-all cursor-pointer">
             Todos
         </button>
 
-        @for (cat of catalog; track cat.id) {
+        @for (cat of catalog(); track cat.id) {
             <button 
                 (click)="setCategory(cat.catName)"
-                [class.bg-brand-gradient]="activeCategory === cat.catName"
-                [class.text-white]="activeCategory === cat.catName"
-                [class.border-transparent]="activeCategory === cat.catName"
-                [class.bg-card]="activeCategory !== cat.catName"
-                [class.text-subtext]="activeCategory !== cat.catName"
-                [class.border-gray]="activeCategory !== cat.catName"
+                [class.bg-brand-gradient]="activeCategory() === cat.catName"
+                [class.text-white]="activeCategory() === cat.catName"
+                [class.border-transparent]="activeCategory() === cat.catName"
+                [class.bg-card]="activeCategory() !== cat.catName"
+                [class.text-subtext]="activeCategory() !== cat.catName"
+                [class.border-gray]="activeCategory() !== cat.catName"
                 class="px-6 py-2.5 rounded-full whitespace-nowrap text-sm font-medium border hover:text-white transition-all cursor-pointer">
                 {{ cat.catName }}
             </button>
         }
     </div>
 
-    <div class="relative w-full mb-8">
-        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-            <lucide-icon name="search" class="w-5 h-5 text-subtext"></lucide-icon>
-        </div>
-
-        <input 
-            type="text" 
-            placeholder="Buscar por itens" 
-            (input)="onSearch($event)"
-            class="w-full bg-card border border-gray rounded-full py-3.5 pl-14 pr-6 text-white outline-none focus:border-primary transition-colors placeholder:text-subtext"
-        >
-    </div>
-
     <div class="flex flex-col gap-10">
-        @for (section of filteredCatalogList; track section.id) {
+        @for (section of filteredCatalogList(); track section.id){
             <div>
                 <h3 class="text-xl font-bold text-white mb-6 mt-4">{{ section.catName }}</h3>
 
@@ -85,7 +72,7 @@
             </div>
         }
         
-        @if (filteredCatalogList.length === 0) {
+        @if (filteredCatalogList().length === 0) {
             <div class="text-center text-subtext py-12">
                 Nenhum produto encontrado.
             </div>

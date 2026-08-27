@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class DistanceService {
@@ -24,7 +25,7 @@ export class DistanceService {
     }
 
     private async getCoordinates(address: string): Promise<{lat: number, lon: number} | null> {
-        const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(address)}`;
+        const url = `${environment.nominatimUrl}?format=json&limit=1&q=${encodeURIComponent(address)}`;
         const response = await firstValueFrom(this.http.get<any[]>(url));
 
         if (response && response.length > 0) {
@@ -37,7 +38,7 @@ export class DistanceService {
     }
 
     private async getDrivingDistance(origin: {lat: number, lon: number}, dest: {lat: number, lon: number}): Promise<number> {
-        const url = `https://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${dest.lon},${dest.lat}?overview=false`;
+        const url = `${environment.osrmUrl}/${origin.lon},${origin.lat};${dest.lon},${dest.lat}?overview=false`;
         const response = await firstValueFrom(this.http.get<any>(url));
 
         if (response && response.routes && response.routes.length > 0) {

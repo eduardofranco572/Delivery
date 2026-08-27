@@ -9,15 +9,15 @@ import { AdminService, DashboardMetrics } from './admin-dashboard.service';
 import { AlertService } from '../../../core/services/alert.service';
 
 export type ChartOptions = {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  xaxis: ApexXAxis;
-  yaxis: ApexYAxis;
-  stroke: ApexStroke;
-  tooltip: ApexTooltip;
-  dataLabels: ApexDataLabels;
-  theme: ApexTheme;
-  colors: string[];
+    series: ApexAxisChartSeries;
+    chart: ApexChart;
+    xaxis: ApexXAxis;
+    yaxis: ApexYAxis;
+    stroke: ApexStroke;
+    tooltip: ApexTooltip;
+    dataLabels: ApexDataLabels;
+    theme: ApexTheme;
+    colors: string[];
 };
 
 @Component({
@@ -60,7 +60,6 @@ export class DashboardComponent implements OnInit {
     }
 
     applyQuickFilter() {
-        // Tira o foco do elemento ativo (o select) para remover a borda laranja na hora
         if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
         }

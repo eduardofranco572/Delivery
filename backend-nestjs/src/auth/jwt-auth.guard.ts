@@ -8,24 +8,24 @@ export class JwtAuthGuard implements CanActivate {
 
     canActivate(context: ExecutionContext): boolean {
         const request = context.switchToHttp().getRequest();
-        const authHeader = request.headers.authorization;
+        
+        let token = request.cookies?.token;
 
-        if (!authHeader) {
-            throw new UnauthorizedException('Token de autenticação não fornecido.');
+        if (!token) {
+            const authHeader = request.headers.authorization;
+            if (authHeader && authHeader.startsWith('Bearer ')) {
+                token = authHeader.split(' ')[1];
+            }
         }
 
-        const [type, token] = authHeader.split(' ');
-
-        if (type !== 'Bearer' || !token) {
-            throw new UnauthorizedException('Formato de token inválido.');
+        if (!token) {
+            throw new UnauthorizedException('Token de autenticação não fornecido.');
         }
 
         try {
             const secret = this.configService.get<string>('JWT_SECRET')!;
             const decoded = jwt.verify(token, secret);
-            
             request.user = decoded; 
-            
             return true;
         } catch (error) {
             throw new UnauthorizedException('Token inválido ou expirado.');

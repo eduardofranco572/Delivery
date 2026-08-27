@@ -36,7 +36,7 @@ export class LoginComponent {
 
     onSubmitForm() {
         if (this.loginForm.invalid) {
-             this.alertService.warning(
+            this.alertService.warning(
                 'Atenção', 
                 'Verifique se todos os campos estão preenchidos'
             );
@@ -47,10 +47,6 @@ export class LoginComponent {
 
         this.authService.login(credentials).subscribe({
             next: (response) => {
-                if (response.token) {
-                    this.authService.setToken(response.token);
-                }
-                
                 this.alertService.success(
                     'Bem-vindo!',
                     'Login realizado com sucesso.',
@@ -59,7 +55,7 @@ export class LoginComponent {
             },
             error: (error) => {
                 this.alertService.error(
-                    'Ops...',
+                    'Erro...',
                     error.error?.error || 'Não foi possível fazer login.'
                 );
             }

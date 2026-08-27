@@ -72,6 +72,7 @@ export class AdminGroupsComponent implements OnInit {
             next: (response) => {
                 if (this.currentPage === 1) {
                     this.groups = response.data;
+                    
                 } else {
                     this.groups = [...this.groups, ...response.data];
                 }

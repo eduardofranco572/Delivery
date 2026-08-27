@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { LoginCredentials, SignupData, AuthResponse } from '../../features/auth/models/auth.models';
+import { Observable, tap } from 'rxjs';
+import { LoginCredentials, SignupData, AuthResponse, User } from '../../features/auth/models/auth.models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private apiUrl = 'http://localhost:3000/api/auth';
+    private apiUrl = `${environment.apiUrl}/auth`;
+    currentUser = signal<User | null>(this.getUserFromStorage());
 
     constructor(private http: HttpClient) {}
 
@@ -16,47 +18,40 @@ export class AuthService {
     }
 
     login(credentials: LoginCredentials): Observable<AuthResponse> {
-        return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials);
+        return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
+            tap((response) => {
+                if (response.user) {
+                    this.setUser(response.user);
+                }
+            })
+        );
     }
 
-    setToken(token: string) {
-        document.cookie = `token=${token}; path=/; max-age=86400`;
+    logout() {
+        this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe();
+        this.currentUser.set(null);
+        localStorage.removeItem('authUser');
     }
 
-    getToken(): string | null {
-        const match = document.cookie.match(new RegExp('(^| )token=([^;]+)'));
-        return match ? match[2] : null;
+    private setUser(user: User) {
+        this.currentUser.set(user);
+        localStorage.setItem('authUser', JSON.stringify(user));
+    }
+
+    private getUserFromStorage(): User | null {
+        const userStr = localStorage.getItem('authUser');
+        return userStr ? JSON.parse(userStr) : null;
     }
 
     isLoggedIn(): boolean {
-        return !!this.getToken();
+        return this.currentUser() !== null;
     }
 
     getUserId(): number | null {
-        const token = this.getToken();
-        if (!token) return null;
-
-        try {
-            const payload = token.split('.')[1];
-            const decoded = JSON.parse(atob(payload));
-            return decoded.id;
-
-        } catch (e) {
-            console.error('Erro ao decodificar o token', e);
-            return null;
-        }
+        return this.currentUser()?.id || null;
     }
 
     isAdmin(): boolean {
-        const token = this.getToken();
-        if (!token) return false;
-
-        try {
-            const payload = token.split('.')[1];
-            const decoded = JSON.parse(atob(payload));
-            return !!decoded.isAdmin;
-        } catch (e) {
-            return false;
-        }
+        return !!this.currentUser()?.isAdmin;
     }
 }

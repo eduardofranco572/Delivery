@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { LucideAngularModule } from 'lucide-angular';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { AlertService } from '../../../../core/services/alert.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-address-form-modal',
@@ -50,7 +51,7 @@ export class AddressFormModalComponent implements OnInit {
         const cep = input.value.replace(/\D/g, '');
 
         if (cep.length === 8) {
-            this.http.get(`https://viacep.com.br/ws/${cep}/json/`).subscribe({
+            this.http.get(`${environment.viaCepUrl}/${cep}/json/`).subscribe({
                 next: (response: any) => {
                     if (!response.erro) {
                         this.addressForm.patchValue({

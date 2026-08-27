@@ -2,7 +2,10 @@
     <div class="flex justify-between items-center p-6 border-b border-gray">
         <h3 class="text-xl font-bold text-white">Meus Endereços</h3>
         
-        <button (click)="close()" class="text-subtext hover:text-white transition-colors p-2 rounded-full hover:bg-gray cursor-pointer">
+        <button 
+            (click)="close()" 
+            class="text-subtext hover:text-white transition-colors p-2 rounded-full hover:bg-gray cursor-pointer"
+        >
             <lucide-icon name="x" class="w-6 h-6"></lucide-icon>
         </button>
     </div>
@@ -29,7 +32,10 @@
                     <span class="text-subtext text-xs mt-0.5">{{ addr.city }} - {{ addr.state }}</span>
                 </div>
                 
-                <button (click)="editAddress(addr)" class="p-2 rounded-lg bg-card border border-gray text-subtext hover:text-primary hover:border-primary transition-all cursor-pointer">
+                <button 
+                    (click)="editAddress(addr)" 
+                    class="p-2 rounded-lg bg-card border border-gray text-subtext hover:text-primary hover:border-primary transition-all cursor-pointer"
+                >
                     <lucide-icon name="pencil" class="w-4 h-4"></lucide-icon>
                 </button>
             </div>

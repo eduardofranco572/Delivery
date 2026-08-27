@@ -1,16 +1,15 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, computed, signal, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { LucideAngularModule } from 'lucide-angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-
 import { HomeService } from '../../home.service';
-import { CartService } from '../../../cart/cart.service'
+import { CartService } from '../../../cart/cart.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { AlertService } from '../../../../core/services/alert.service';
 import { ItemDetailsComponent } from '../../../../shared/components/item-details/item-details.component';
-
-import { Category, Product } from '../../../../core/models/domain.models';
+import { Product } from '../../../../core/models/domain.models';
 import { CartPayload } from '../../../cart/models/cart.models';
 
 @Component({
@@ -19,69 +18,48 @@ import { CartPayload } from '../../../cart/models/cart.models';
     imports: [LucideAngularModule, CommonModule, DialogModule],
     templateUrl: './product-list.component.html'
 })
-export class ProductListComponent implements OnInit {
-    catalog: Category[] = [];
-    filteredCatalogList: Category[] = [];
-    activeCategory: string = 'Todos';
-    searchQuery: string = '';
+export class ProductListComponent {
+    private homeService = inject(HomeService);
+    private cartService = inject(CartService);
+    private authService = inject(AuthService);
+    private alertService = inject(AlertService);
+    private router = inject(Router);
+    private dialog = inject(Dialog);
 
-    constructor(
-        private homeService: HomeService,
-        private cartService: CartService,
-        private authService: AuthService,
-        private alertService: AlertService,
-        private router: Router,
-        private dialog: Dialog,
-        private cdr: ChangeDetectorRef
-    ) {}
+    activeCategory = signal<string>('Todos');
+    searchQuery = signal<string>('');
 
-    ngOnInit() {
-        this.homeService.getCatalog().subscribe({
-            next: (data) => {
-                this.catalog = data;
-                this.updateFilteredCatalog();
-            },
-            error: (err) => console.error('Erro na requisição:', err)
-        });
-    }
+    catalog = toSignal(this.homeService.getCatalog(), { initialValue: [] });
+
+    filteredCatalogList = computed(() => {
+        const currentCatalog = this.catalog();
+        const category = this.activeCategory();
+        const query = this.searchQuery();
+
+        if (!currentCatalog) return [];
+
+        return currentCatalog.map(cat => {
+            const products = cat.products || [];
+
+            const filteredProducts = products.filter((p: Product) =>
+                p.prodName.toLowerCase().includes(query)
+            );
+
+            return { ...cat, products: filteredProducts };
+
+        }).filter(categoryItem =>
+            (category === 'Todos' || category === categoryItem.catName) &&
+            categoryItem.products && categoryItem.products.length > 0
+        );
+    });
 
     setCategory(categoryName: string) {
-        this.activeCategory = categoryName;
-        this.updateFilteredCatalog();
+        this.activeCategory.set(categoryName);
     }
 
     onSearch(event: Event) {
         const input = event.target as HTMLInputElement;
-        this.searchQuery = (input.value || '').toLowerCase();
-        this.updateFilteredCatalog();
-    }
-
-    updateFilteredCatalog() {
-        try {
-            if (!this.catalog) return;
-
-            this.filteredCatalogList = this.catalog.map(category => {
-                const products = category.products || [];
-
-                const filteredProducts = products.filter((p: Product) => {
-                    const name = p.prodName;
-
-                    return name.toLowerCase().includes(this.searchQuery);
-                    
-                });
-
-                return { ...category, products: filteredProducts };
-
-            }).filter(category => 
-                (this.activeCategory === 'Todos' || this.activeCategory === category.catName) && 
-                category.products && category.products.length > 0
-            );
-
-            this.cdr.detectChanges();
-
-        } catch (error) {
-            console.error('Erro ao filtrar produtos:', error);
-        }
+        this.searchQuery.set((input.value || '').toLowerCase());
     }
 
     openProductDetails(productId: number) {
@@ -94,7 +72,6 @@ export class ProductListComponent implements OnInit {
                     panelClass: ['w-full', 'md:w-[28rem]', 'lg:w-[40%]', 'h-full', '!fixed', '!right-0', '!inset-y-0', 'animate-slide-in-right'],
                 });
 
-
                 dialogRef.closed.subscribe((result) => {
                     if (result) {
                         this.processAddToCart(result);
@@ -102,14 +79,14 @@ export class ProductListComponent implements OnInit {
                 });
             },
             error: () => {
-                this.alertService.error('Erro', 'Não foi possível carregar o produto.');
+                this.alertService.error('Erro', 'Não foi possível carregar o produto.')
             }
         });
     }
 
     private processAddToCart(payload: CartPayload) {
         const userId = this.authService.getUserId();
-        
+
         if (!userId) {
             this.router.navigate(['/404']);
             return;
@@ -117,10 +94,10 @@ export class ProductListComponent implements OnInit {
 
         this.cartService.addItem(userId, payload).subscribe({
             next: () => {
-                this.cartService.updateCartCount(userId);
+                this.cartService.updateCartCount(userId)
             },
             error: () => {
-                this.alertService.error('Erro', 'Não foi possível adicionar o item.');
+                this.alertService.error('Erro', 'Não foi possível adicionar o item.')
             }
         });
     }

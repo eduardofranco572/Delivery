@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -18,7 +20,13 @@ import { GroupsModule } from './group/groups.module'
 
 @Module({
     imports: [
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+            driver: ApolloDriver,
+            autoSchemaFile: true,
+        }),
+
         ConfigModule.forRoot({ isGlobal: true }),
+
         PrismaModule, 
         AuthModule, 
         HomeModule, 

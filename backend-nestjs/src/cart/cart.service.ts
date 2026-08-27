@@ -14,34 +14,33 @@ export class CartService {
 
     async getCart(userId: number) {
         const cartStr = await this.redis.get(`cart:${userId}`);
-        
         if (!cartStr) {
-            return {
-                items: [],
-                cartTotal: 0,
+            return { 
+                items: [], 
+                cartTotal: 0 
             };
         }
 
         const cartState: RedisCartState = JSON.parse(cartStr);
-        let cartTotal = 0;
 
         const populatedItems = await Promise.all(
             cartState.items.map(async (item) => {
+                if (!item || !item.productId) return null;
+
                 const product = await this.prisma.product.findUnique({
-                    where: { id: item.productId },
+                    where: { id: Number(item.productId) },
                 });
-                
+
                 if (!product) return null;
 
                 const preferences = await this.prisma.preference.findMany({
-                    where: { id: { in: item.preferenceIds } },
+                    where: { id: { in: item.preferenceIds || [] } },
                 });
 
                 const basePrice = product.prodPromotionalPrice || product.prodOriginalPrice;
                 const prefsPrice = preferences.reduce((sum, pref) => sum + (pref.prefPrice || 0), 0);
-                const itemTotal = (basePrice + prefsPrice) * item.quantity;
-                
-                cartTotal += itemTotal;
+                const quantity = Number(item.quantity) || 1;
+                const itemTotal = (basePrice + prefsPrice) * quantity;
 
                 const backendUrl = process.env.BASE_URL || 'http://localhost:3000';
                 const prodImageUrl = product.prodImageUrl 
@@ -50,8 +49,8 @@ export class CartService {
 
                 return {
                     cartItemId: item.cartItemId,
-                    quantity: item.quantity,
-                    observation: item.observation,
+                    quantity: quantity,
+                    observation: item.observation || '',
                     product: { ...product, prodImageUrl },
                     preferences,
                     itemTotal
@@ -61,36 +60,48 @@ export class CartService {
 
         const validItems = populatedItems.filter(item => item !== null);
 
-        return {
-            items: validItems,
-            cartTotal: cartTotal,
-        };
+        if (validItems.length !== cartState.items.length) {
+            const healedState = {
+                items: validItems.map(vi => ({
+                    cartItemId: vi.cartItemId,
+                    productId: vi.product.id,
+                    quantity: vi.quantity,
+                    observation: vi.observation,
+                    preferenceIds: vi.preferences.map(p => p.id)
+                }))
+            };
+            await this.redis.set(`cart:${userId}`, JSON.stringify(healedState), 'EX', this.TTL_SECONDS);
+        }
+
+        const finalCartTotal = validItems.reduce((sum, item) => sum + item.itemTotal, 0);
+
+        return { items: validItems, cartTotal: finalCartTotal };
     }
 
-    async addItemToCart(userId: number, itemData: AddCartItemDto) {
+    async addItemToCart(userId: number, itemData: any) {
         const { productId, quantity, observation, preferenceIds } = itemData;
+
+        if (!productId || !quantity) {
+            throw new Error('Payload inválido: productId ou quantity ausente');
+        }
 
         const cartStr = await this.redis.get(`cart:${userId}`);
         const cartState: RedisCartState = cartStr ? JSON.parse(cartStr) : { items: [] };
 
-        const cartItemId = Date.now().toString();
-
         cartState.items.push({
-            cartItemId,
+            cartItemId: Date.now().toString(),
             productId,
             quantity,
             observation: observation || '',
             preferenceIds: preferenceIds || [],
         });
 
-        await this.redis.set(
-            `cart:${userId}`,
-            JSON.stringify(cartState),
-            'EX',
-            this.TTL_SECONDS
-        );
+        await this.redis.set(`cart:${userId}`, JSON.stringify(cartState), 'EX', this.TTL_SECONDS);
 
-        return { message: 'Item adicionado ao carrinho com sucesso', cartItemId };
+        return { 
+            message: 'Item adicionado ao carrinho com sucesso', 
+            cartItemId: cartState.items[cartState.items.length - 1].cartItemId 
+        };
     }
 
     async updateCartItemQuantity(userId: number, cartItemId: string, quantity: number) {
@@ -136,14 +147,11 @@ export class CartService {
 
     async getCartCount(userId: number) {
         const cartStr = await this.redis.get(`cart:${userId}`);
-        
-        if (!cartStr) {
-            return { count: 0 };
-        }
+        if (!cartStr) return { count: 0 };
 
         const cartState: RedisCartState = JSON.parse(cartStr);
-        const count = cartState.items.reduce((sum, item) => sum + item.quantity, 0);
         
+        const count = cartState.items.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
         return { count };
     }
 

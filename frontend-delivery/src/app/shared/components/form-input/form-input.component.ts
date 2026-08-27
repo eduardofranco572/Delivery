@@ -9,9 +9,9 @@ import { LucideAngularModule } from 'lucide-angular';
   templateUrl: './form-input.component.html',
   providers: [
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FormInputComponent),
-      multi: true
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => FormInputComponent),
+        multi: true
     }
   ]
 })

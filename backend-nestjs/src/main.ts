@@ -5,10 +5,18 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
 
+import cookieParser = require('cookie-parser');
+
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
-    
-    app.enableCors();
+
+    app.use(cookieParser());
+
+    app.enableCors({
+        origin: 'http://localhost:4200',
+        credentials: true,
+    });
+
     app.setGlobalPrefix('api');
     app.useGlobalPipes(
         new ValidationPipe({
@@ -28,4 +36,5 @@ async function bootstrap() {
     await app.listen(port);
     console.log(`Backend rodando na porta ${port}!`);
 }
+
 bootstrap();
